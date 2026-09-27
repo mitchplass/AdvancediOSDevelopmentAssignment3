@@ -2,11 +2,14 @@ import Foundation
 
 enum OpenTodaysDiaryError: Error, Equatable {
     case siteNameMissing
+    case dayAlreadyClosed
 
     var whatWentWrong: String {
         switch self {
         case .siteNameMissing:
             return "This diary has no site name."
+        case .dayAlreadyClosed:
+            return "Today's diary is already closed."
         }
     }
 
@@ -14,6 +17,8 @@ enum OpenTodaysDiaryError: Error, Equatable {
         switch self {
         case .siteNameMissing:
             return "Enter the site name before you open the day."
+        case .dayAlreadyClosed:
+            return "Today is finished. Open a diary for another date instead of starting a second one."
         }
     }
 }
@@ -28,6 +33,9 @@ struct OpenTodaysDiary {
         }
 
         if let existing = try repository.workday(on: day) {
+            guard existing.status == .open else {
+                throw OpenTodaysDiaryError.dayAlreadyClosed
+            }
             return existing
         }
 
