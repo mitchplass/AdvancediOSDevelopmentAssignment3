@@ -40,6 +40,9 @@ struct TodayOnSiteView: View {
                 Section {
                     LabeledContent("Knock-off defects", value: "\(model.knockOffDefectCount)")
                     LabeledContent("Crew on site", value: "\(model.crewOnSiteCount)")
+                    NavigationLink("Defects") {
+                        DefectListScreen()
+                    }
                 }
             } else {
                 Section {
