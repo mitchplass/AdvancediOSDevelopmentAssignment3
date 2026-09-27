@@ -43,6 +43,14 @@ struct TodayOnSiteView: View {
                     NavigationLink("Defects") {
                         DefectListScreen()
                     }
+                    NavigationLink("Crew on site") {
+                        CrewOnSiteScreen()
+                    }
+                    if workday.status == .open {
+                        NavigationLink("Close out the day") {
+                            CloseOutScreen()
+                        }
+                    }
                 }
             } else {
                 Section {
