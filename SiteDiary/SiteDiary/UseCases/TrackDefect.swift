@@ -3,6 +3,7 @@ import Foundation
 enum TrackDefectError: Error, Equatable {
     case titleMissing
     case diaryNotOpen
+    case defectNotFound
 
     var whatWentWrong: String {
         switch self {
@@ -10,6 +11,8 @@ enum TrackDefectError: Error, Equatable {
             return "This defect has no title."
         case .diaryNotOpen:
             return "There is no diary open for this day."
+        case .defectNotFound:
+            return "That defect is not in the diary."
         }
     }
 
@@ -19,6 +22,8 @@ enum TrackDefectError: Error, Equatable {
             return "Name what is wrong so the crew knows what to fix."
         case .diaryNotOpen:
             return "Open the day before you record a defect."
+        case .defectNotFound:
+            return "Record it first, then mark it cleared."
         }
     }
 }
@@ -53,6 +58,16 @@ struct TrackDefect {
             recordedAt: recordedAt,
             clearedAt: nil
         )
+        try repository.save(defect)
+        return defect
+    }
+
+    func clear(defectID: UUID, at clearedAt: Date = Date()) throws -> Defect {
+        guard var defect = try repository.defect(id: defectID) else {
+            throw TrackDefectError.defectNotFound
+        }
+        defect.status = .cleared
+        defect.clearedAt = clearedAt
         try repository.save(defect)
         return defect
     }
