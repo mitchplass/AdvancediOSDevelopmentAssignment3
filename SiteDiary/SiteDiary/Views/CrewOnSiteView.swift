@@ -2,19 +2,21 @@ import SwiftUI
 
 struct CrewOnSiteScreen: View {
     @Environment(\.siteDiaryRepository) private var repository
-    @State private var model: CrewOnSiteViewModel?
 
     var body: some View {
-        Group {
-            if let model {
-                CrewOnSiteView(model: model)
-            }
-        }
-        .task {
-            if model == nil {
-                model = CrewOnSiteViewModel(repository: repository)
-            }
-        }
+        CrewOnSiteHost(repository: repository)
+    }
+}
+
+private struct CrewOnSiteHost: View {
+    @State private var model: CrewOnSiteViewModel
+
+    init(repository: any SiteDiaryRepository) {
+        _model = State(initialValue: CrewOnSiteViewModel(repository: repository))
+    }
+
+    var body: some View {
+        CrewOnSiteView(model: model)
     }
 }
 

@@ -2,19 +2,21 @@ import SwiftUI
 
 struct CloseOutScreen: View {
     @Environment(\.siteDiaryRepository) private var repository
-    @State private var model: CloseOutViewModel?
 
     var body: some View {
-        Group {
-            if let model {
-                CloseOutView(model: model)
-            }
-        }
-        .task {
-            if model == nil {
-                model = CloseOutViewModel(repository: repository)
-            }
-        }
+        CloseOutHost(repository: repository)
+    }
+}
+
+private struct CloseOutHost: View {
+    @State private var model: CloseOutViewModel
+
+    init(repository: any SiteDiaryRepository) {
+        _model = State(initialValue: CloseOutViewModel(repository: repository))
+    }
+
+    var body: some View {
+        CloseOutView(model: model)
     }
 }
 

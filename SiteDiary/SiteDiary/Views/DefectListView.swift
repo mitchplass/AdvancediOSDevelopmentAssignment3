@@ -2,19 +2,21 @@ import SwiftUI
 
 struct DefectListScreen: View {
     @Environment(\.siteDiaryRepository) private var repository
-    @State private var model: DefectListViewModel?
 
     var body: some View {
-        Group {
-            if let model {
-                DefectListView(model: model)
-            }
-        }
-        .task {
-            if model == nil {
-                model = DefectListViewModel(repository: repository)
-            }
-        }
+        DefectListHost(repository: repository)
+    }
+}
+
+private struct DefectListHost: View {
+    @State private var model: DefectListViewModel
+
+    init(repository: any SiteDiaryRepository) {
+        _model = State(initialValue: DefectListViewModel(repository: repository))
+    }
+
+    var body: some View {
+        DefectListView(model: model)
     }
 }
 

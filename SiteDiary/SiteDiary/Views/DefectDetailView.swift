@@ -3,19 +3,21 @@ import SwiftUI
 struct DefectDetailScreen: View {
     @Environment(\.siteDiaryRepository) private var repository
     let defectID: UUID
-    @State private var model: DefectDetailViewModel?
 
     var body: some View {
-        Group {
-            if let model {
-                DefectDetailView(model: model)
-            }
-        }
-        .task {
-            if model == nil {
-                model = DefectDetailViewModel(repository: repository, defectID: defectID)
-            }
-        }
+        DefectDetailHost(repository: repository, defectID: defectID)
+    }
+}
+
+private struct DefectDetailHost: View {
+    @State private var model: DefectDetailViewModel
+
+    init(repository: any SiteDiaryRepository, defectID: UUID) {
+        _model = State(initialValue: DefectDetailViewModel(repository: repository, defectID: defectID))
+    }
+
+    var body: some View {
+        DefectDetailView(model: model)
     }
 }
 

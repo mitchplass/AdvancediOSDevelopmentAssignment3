@@ -2,19 +2,21 @@ import SwiftUI
 
 struct TodayOnSiteScreen: View {
     @Environment(\.siteDiaryRepository) private var repository
-    @State private var model: TodayOnSiteViewModel?
 
     var body: some View {
-        Group {
-            if let model {
-                TodayOnSiteView(model: model)
-            }
-        }
-        .task {
-            if model == nil {
-                model = TodayOnSiteViewModel(repository: repository)
-            }
-        }
+        TodayOnSiteHost(repository: repository)
+    }
+}
+
+private struct TodayOnSiteHost: View {
+    @State private var model: TodayOnSiteViewModel
+
+    init(repository: any SiteDiaryRepository) {
+        _model = State(initialValue: TodayOnSiteViewModel(repository: repository))
+    }
+
+    var body: some View {
+        TodayOnSiteView(model: model)
     }
 }
 

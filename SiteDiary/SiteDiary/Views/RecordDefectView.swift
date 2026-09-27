@@ -2,19 +2,21 @@ import SwiftUI
 
 struct RecordDefectScreen: View {
     @Environment(\.siteDiaryRepository) private var repository
-    @State private var model: RecordDefectViewModel?
 
     var body: some View {
-        Group {
-            if let model {
-                RecordDefectView(model: model)
-            }
-        }
-        .task {
-            if model == nil {
-                model = RecordDefectViewModel(repository: repository)
-            }
-        }
+        RecordDefectHost(repository: repository)
+    }
+}
+
+private struct RecordDefectHost: View {
+    @State private var model: RecordDefectViewModel
+
+    init(repository: any SiteDiaryRepository) {
+        _model = State(initialValue: RecordDefectViewModel(repository: repository))
+    }
+
+    var body: some View {
+        RecordDefectView(model: model)
     }
 }
 
