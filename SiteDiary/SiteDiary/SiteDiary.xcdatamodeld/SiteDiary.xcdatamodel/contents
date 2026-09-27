@@ -1,9 +1,36 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="1" systemVersion="11A491" minimumToolsVersion="Automatic" sourceLanguage="Swift" usedWithCloudKit="false" userDefinedModelVersionIdentifier="">
-    <entity name="Item" representedClassName="Item" syncable="YES" codeGenerationType="class">
-        <attribute name="timestamp" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="26300" systemVersion="24F74" minimumToolsVersion="Automatic" sourceLanguage="Swift" usedWithCloudKit="false" userDefinedModelVersionIdentifier="">
+    <entity name="CrewPresence" representedClassName="CrewPresenceRecord" syncable="YES" codeGenerationType="class">
+        <attribute name="id" optional="NO" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="signedOffAt" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="signedOnAt" optional="NO" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="trade" optional="NO" attributeType="String"/>
+        <attribute name="workerName" optional="NO" attributeType="String"/>
+        <relationship name="workday" optional="NO" maxCount="1" deletionRule="Nullify" destinationEntity="Workday" inverseName="crew" inverseEntity="Workday"/>
+    </entity>
+    <entity name="Defect" representedClassName="DefectRecord" syncable="YES" codeGenerationType="class">
+        <attribute name="clearedAt" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="detail" optional="YES" attributeType="String"/>
+        <attribute name="id" optional="NO" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="location" optional="NO" attributeType="String"/>
+        <attribute name="mustClearBeforeKnockOff" optional="NO" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
+        <attribute name="recordedAt" optional="NO" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="status" optional="NO" attributeType="String" defaultValueString="open"/>
+        <attribute name="title" optional="NO" attributeType="String"/>
+        <relationship name="workday" optional="NO" maxCount="1" deletionRule="Nullify" destinationEntity="Workday" inverseName="defects" inverseEntity="Workday"/>
+    </entity>
+    <entity name="Workday" representedClassName="WorkdayRecord" syncable="YES" codeGenerationType="class">
+        <attribute name="calendarDate" optional="NO" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="id" optional="NO" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="knockOffTime" optional="NO" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="siteName" optional="NO" attributeType="String"/>
+        <attribute name="status" optional="NO" attributeType="String" defaultValueString="open"/>
+        <relationship name="crew" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="CrewPresence" inverseName="workday" inverseEntity="CrewPresence"/>
+        <relationship name="defects" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Defect" inverseName="workday" inverseEntity="Defect"/>
     </entity>
     <elements>
-        <element name="Item" positionX="-63" positionY="-18" width="128" height="44"/>
+        <element name="CrewPresence" positionX="180" positionY="160" width="128" height="134"/>
+        <element name="Defect" positionX="180" positionY="-20" width="128" height="164"/>
+        <element name="Workday" positionX="-63" positionY="40" width="128" height="149"/>
     </elements>
 </model>

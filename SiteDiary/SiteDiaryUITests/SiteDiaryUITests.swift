@@ -1,10 +1,3 @@
-//
-//  SiteDiaryUITests.swift
-//  SiteDiaryUITests
-//
-//  Created by Mitchell Plass on 27/9/2026.
-//
-
 import XCTest
 
 final class SiteDiaryUITests: XCTestCase {

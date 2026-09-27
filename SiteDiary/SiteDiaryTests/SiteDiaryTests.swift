@@ -1,10 +1,3 @@
-//
-//  SiteDiaryTests.swift
-//  SiteDiaryTests
-//
-//  Created by Mitchell Plass on 27/9/2026.
-//
-
 import XCTest
 @testable import SiteDiary
 
