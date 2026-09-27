@@ -3,6 +3,7 @@ import Foundation
 enum CloseOutWorkdayError: Error, Equatable {
     case diaryNotOpen
     case dayAlreadyClosed
+    case knockOffDefectsStillOpen(count: Int, locations: [String])
 
     var whatWentWrong: String {
         switch self {
@@ -10,6 +11,9 @@ enum CloseOutWorkdayError: Error, Equatable {
             return "There is no diary open for this day."
         case .dayAlreadyClosed:
             return "This day's diary is already closed."
+        case .knockOffDefectsStillOpen(let count, _):
+            let defects = count == 1 ? "defect is" : "defects are"
+            return "\(count) knock-off \(defects) still open."
         }
     }
 
@@ -19,6 +23,8 @@ enum CloseOutWorkdayError: Error, Equatable {
             return "Open the day before you close it out."
         case .dayAlreadyClosed:
             return "Leave it closed. Open a diary for another date if the job continues."
+        case .knockOffDefectsStillOpen(_, let locations):
+            return "Clear them before you close the day. Still open: \(locations.joined(separator: "; "))."
         }
     }
 }
@@ -32,6 +38,13 @@ struct CloseOutWorkday {
         }
         guard workday.status == .open else {
             throw CloseOutWorkdayError.dayAlreadyClosed
+        }
+        let stillOpen = try repository.openKnockOffDefects(on: day)
+        if !stillOpen.isEmpty {
+            throw CloseOutWorkdayError.knockOffDefectsStillOpen(
+                count: stillOpen.count,
+                locations: stillOpen.map(\.location)
+            )
         }
 
         workday.status = .closed
