@@ -1,14 +1,13 @@
 import SwiftUI
-import CoreData
 
 @main
 struct SiteDiaryApp: App {
-    let persistenceController = PersistenceController.shared
+    private let repository: any SiteDiaryRepository = CoreDataSiteDiaryRepository()
 
     var body: some Scene {
         WindowGroup {
             ContentView()
-                .environment(\.managedObjectContext, persistenceController.container.viewContext)
+                .environment(\.siteDiaryRepository, repository)
         }
     }
 }
