@@ -1,10 +1,3 @@
-//
-//  SiteDiaryApp.swift
-//  SiteDiary
-//
-//  Created by Mitchell Plass on 27/9/2026.
-//
-
 import SwiftUI
 import CoreData
 
