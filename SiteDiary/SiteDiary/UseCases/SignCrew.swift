@@ -4,7 +4,10 @@ enum SignCrewError: Error, Equatable {
     case workerNameMissing
     case tradeMissing
     case diaryNotOpen
+    case dayAlreadyClosed
+    case alreadyOnSite(name: String, trade: String)
     case crewNotFound
+    case notOnSite(name: String, trade: String)
 
     var whatWentWrong: String {
         switch self {
@@ -14,8 +17,14 @@ enum SignCrewError: Error, Equatable {
             return "This sign-on has no trade."
         case .diaryNotOpen:
             return "There is no diary open for this day."
+        case .dayAlreadyClosed:
+            return "This day's diary is already closed."
+        case .alreadyOnSite(let name, let trade):
+            return "\(name) (\(trade)) is already signed on."
         case .crewNotFound:
             return "That worker is not on today's crew list."
+        case .notOnSite(let name, let trade):
+            return "\(name) (\(trade)) is not on site."
         }
     }
 
@@ -27,7 +36,11 @@ enum SignCrewError: Error, Equatable {
             return "Enter the trade, such as electrical or formwork."
         case .diaryNotOpen:
             return "Open the day before you sign the crew on."
-        case .crewNotFound:
+        case .dayAlreadyClosed:
+            return "Sign the crew on a day that is still open."
+        case .alreadyOnSite:
+            return "Sign them off before signing them on again."
+        case .crewNotFound, .notOnSite:
             return "Sign them on before you sign them off."
         }
     }
@@ -53,6 +66,17 @@ struct SignCrew {
         guard let workday = try repository.workday(on: day) else {
             throw SignCrewError.diaryNotOpen
         }
+        guard workday.status == .open else {
+            throw SignCrewError.dayAlreadyClosed
+        }
+        let alreadySignedOn = try repository.crew(for: workday.id).contains { person in
+            person.isOnSite
+                && person.workerName.compare(trimmedName, options: .caseInsensitive) == .orderedSame
+                && person.trade.compare(trimmedTrade, options: .caseInsensitive) == .orderedSame
+        }
+        if alreadySignedOn {
+            throw SignCrewError.alreadyOnSite(name: trimmedName, trade: trimmedTrade)
+        }
 
         let presence = CrewPresence(
             id: UUID(),
@@ -69,6 +93,9 @@ struct SignCrew {
     func signOff(presenceID: UUID, at signedOffAt: Date = Date()) throws -> CrewPresence {
         guard var presence = try repository.crewPresence(id: presenceID) else {
             throw SignCrewError.crewNotFound
+        }
+        guard presence.isOnSite else {
+            throw SignCrewError.notOnSite(name: presence.workerName, trade: presence.trade)
         }
         presence.signedOffAt = signedOffAt
         try repository.save(presence)
