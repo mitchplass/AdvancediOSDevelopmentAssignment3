@@ -29,6 +29,15 @@ struct DefectListView: View {
                     .listRowBackground(Color.clear)
             }
 
+            if model.knockOffDefects.isEmpty && model.otherDefects.isEmpty {
+                ContentUnavailableView(
+                    "No defects yet",
+                    systemImage: "exclamationmark.triangle",
+                    description: Text("Record one when you find something that cannot wait until tomorrow.")
+                )
+                .listRowBackground(Color.clear)
+            }
+
             if !model.knockOffDefects.isEmpty {
                 Section("Before knock-off") {
                     ForEach(model.knockOffDefects) { defect in

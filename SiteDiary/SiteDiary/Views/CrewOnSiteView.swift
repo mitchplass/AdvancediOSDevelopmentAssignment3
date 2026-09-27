@@ -29,6 +29,15 @@ struct CrewOnSiteView: View {
                     .listRowBackground(Color.clear)
             }
 
+            if model.onSite.isEmpty && model.signedOff.isEmpty {
+                ContentUnavailableView(
+                    "Nobody is signed on",
+                    systemImage: "person.2",
+                    description: Text("Sign the crew on so you know who is on site.")
+                )
+                .listRowBackground(Color.clear)
+            }
+
             if !model.onSite.isEmpty {
                 Section("On site") {
                     ForEach(model.onSite) { person in

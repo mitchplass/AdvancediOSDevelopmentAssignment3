@@ -31,6 +31,14 @@ struct CloseOutView: View {
 
             if model.isClosed {
                 Text("The day is closed.")
+            } else if !model.hasOpenDiary {
+                Text("Open the day before you close it out.")
+                    .foregroundStyle(.secondary)
+            } else if model.remaining.isEmpty {
+                Text("Nothing must be cleared before knock-off.")
+                Button("Close out the day") {
+                    model.closeOut()
+                }
             } else {
                 Section("Still open before knock-off") {
                     ForEach(model.remaining) { defect in
@@ -42,11 +50,13 @@ struct CloseOutView: View {
                         }
                     }
                 }
-
-                if model.hasOpenDiary {
+                Section {
                     Button("Close out the day") {
                         model.closeOut()
                     }
+                    .disabled(!model.canClose)
+                } footer: {
+                    Text("Clear the knock-off defects before you close the day.")
                 }
             }
         }

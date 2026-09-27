@@ -8,6 +8,10 @@ final class CloseOutViewModel {
     var hasOpenDiary = false
     var notice: DiaryNotice?
 
+    var canClose: Bool {
+        hasOpenDiary && remaining.isEmpty
+    }
+
     private let repository: any SiteDiaryRepository
 
     init(repository: any SiteDiaryRepository) {
