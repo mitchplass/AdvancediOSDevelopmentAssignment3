@@ -59,11 +59,13 @@ struct CrewOnSiteView: View {
             if !model.signedOff.isEmpty {
                 Section("Signed off") {
                     ForEach(model.signedOff) { person in
-                        VStack(alignment: .leading, spacing: 4) {
-                            Text(person.workerName)
-                            Text(person.trade)
-                                .font(.subheadline)
-                                .foregroundStyle(.secondary)
+                        CrewRow(name: person.workerName, trade: person.trade) {
+                            if model.canSignBackOn(person) {
+                                Button("Sign back on") {
+                                    model.signBackOn(person)
+                                }
+                                .buttonStyle(.borderless)
+                            }
                         }
                     }
                 }

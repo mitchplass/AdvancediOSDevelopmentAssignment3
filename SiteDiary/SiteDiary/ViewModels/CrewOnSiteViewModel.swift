@@ -60,4 +60,28 @@ final class CrewOnSiteViewModel {
             notice = DiaryFeedback.couldNotSaveDiary
         }
     }
+
+    func canSignBackOn(_ person: CrewPresence) -> Bool {
+        guard canSignOn else { return false }
+        return !onSite.contains { existing in
+            existing.workerName.compare(person.workerName, options: .caseInsensitive) == .orderedSame
+                && existing.trade.compare(person.trade, options: .caseInsensitive) == .orderedSame
+        }
+    }
+
+    func signBackOn(_ person: CrewPresence) {
+        notice = nil
+        do {
+            _ = try SignCrew(repository: repository).signOn(
+                workerName: person.workerName,
+                trade: person.trade,
+                on: day
+            )
+            load()
+        } catch let error as SignCrewError {
+            notice = DiaryNotice(whatWentWrong: error.whatWentWrong, whatToDoNext: error.whatToDoNext)
+        } catch {
+            notice = DiaryFeedback.couldNotSaveDiary
+        }
+    }
 }
