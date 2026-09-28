@@ -58,7 +58,7 @@ final class SignCrewTests: XCTestCase {
         XCTAssertEqual(repository.crew.count, 1)
     }
 
-    func testSigningOnAgainSucceedsAfterTheyHaveSignedOff() throws {
+    func testSigningOnAgainBringsTheSamePersonBackWithoutASecondEntry() throws {
         let repository = try openDiary()
         let useCase = SignCrew(repository: repository)
         let first = try useCase.signOn(workerName: "Alex", trade: "Electrical", on: today, at: signedOnAt)
@@ -66,9 +66,24 @@ final class SignCrewTests: XCTestCase {
 
         let second = try useCase.signOn(workerName: "Alex", trade: "Electrical", on: today, at: signedOffAt)
 
-        XCTAssertNotEqual(second.id, first.id)
+        XCTAssertEqual(second.id, first.id)
         XCTAssertTrue(second.isOnSite)
-        XCTAssertEqual(repository.crew.count, 2)
+        XCTAssertNil(second.signedOffAt)
+        XCTAssertEqual(repository.crew.count, 1)
+    }
+
+    func testSigningBackOnClearsTheSignOffOnTheSameEntry() throws {
+        let repository = try openDiary()
+        let useCase = SignCrew(repository: repository)
+        let signedOn = try useCase.signOn(workerName: "Alex", trade: "Electrical", on: today, at: signedOnAt)
+        _ = try useCase.signOff(presenceID: signedOn.id, at: signedOffAt)
+
+        let back = try useCase.signBackOn(presenceID: signedOn.id)
+
+        XCTAssertEqual(back.id, signedOn.id)
+        XCTAssertNil(back.signedOffAt)
+        XCTAssertTrue(back.isOnSite)
+        XCTAssertEqual(repository.crew.count, 1)
     }
 
     func testSigningOffFailsWhenTheWorkerIsNotOnSite() throws {

@@ -72,11 +72,7 @@ final class CrewOnSiteViewModel {
     func signBackOn(_ person: CrewPresence) {
         notice = nil
         do {
-            _ = try SignCrew(repository: repository).signOn(
-                workerName: person.workerName,
-                trade: person.trade,
-                on: day
-            )
+            _ = try SignCrew(repository: repository).signBackOn(presenceID: person.id)
             load()
         } catch let error as SignCrewError {
             notice = DiaryNotice(whatWentWrong: error.whatWentWrong, whatToDoNext: error.whatToDoNext)
