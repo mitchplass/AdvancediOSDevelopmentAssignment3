@@ -1,5 +1,6 @@
 import CoreData
 import Foundation
+import WidgetKit
 
 struct CoreDataSiteDiaryRepository: SiteDiaryRepository {
     private let context: NSManagedObjectContext
@@ -220,5 +221,6 @@ struct CoreDataSiteDiaryRepository: SiteDiaryRepository {
         try SiteDiaryGlanceStore.write(
             SiteDiaryGlance.recording(workday: workday, knockOffDefects: knockOffDefects, crew: crewOnSite)
         )
+        WidgetCenter.shared.reloadTimelines(ofKind: SiteDiaryGlance.widgetKind)
     }
 }
