@@ -77,6 +77,13 @@ struct SignCrew {
         if alreadySignedOn {
             throw SignCrewError.alreadyOnSite(name: trimmedName, trade: trimmedTrade)
         }
+        if let signedOff = try repository.crew(for: workday.id).last(where: { person in
+            !person.isOnSite
+                && person.workerName.compare(trimmedName, options: .caseInsensitive) == .orderedSame
+                && person.trade.compare(trimmedTrade, options: .caseInsensitive) == .orderedSame
+        }) {
+            return try signBackOn(presenceID: signedOff.id)
+        }
 
         let presence = CrewPresence(
             id: UUID(),
@@ -98,6 +105,25 @@ struct SignCrew {
             throw SignCrewError.notOnSite(name: presence.workerName, trade: presence.trade)
         }
         presence.signedOffAt = signedOffAt
+        try repository.save(presence)
+        return presence
+    }
+
+    func signBackOn(presenceID: UUID) throws -> CrewPresence {
+        guard var presence = try repository.crewPresence(id: presenceID) else {
+            throw SignCrewError.crewNotFound
+        }
+        guard !presence.isOnSite else {
+            throw SignCrewError.alreadyOnSite(name: presence.workerName, trade: presence.trade)
+        }
+        guard let workday = try repository.allWorkdays().first(where: { $0.id == presence.workdayID }) else {
+            throw SignCrewError.diaryNotOpen
+        }
+        guard workday.status == .open else {
+            throw SignCrewError.dayAlreadyClosed
+        }
+
+        presence.signedOffAt = nil
         try repository.save(presence)
         return presence
     }

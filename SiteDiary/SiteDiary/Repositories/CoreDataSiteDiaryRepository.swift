@@ -16,6 +16,12 @@ struct CoreDataSiteDiaryRepository: SiteDiaryRepository {
         return matches.first
     }
 
+    func allWorkdays() throws -> [Workday] {
+        let request = WorkdayRecord.fetchRequest()
+        request.sortDescriptors = [NSSortDescriptor(key: "calendarDate", ascending: false)]
+        return try context.fetch(request).map { try map($0) }
+    }
+
     func save(_ workday: Workday) throws {
         let record = try workdayRecord(id: workday.id) ?? WorkdayRecord(context: context)
         record.id = workday.id

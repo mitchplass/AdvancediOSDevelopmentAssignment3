@@ -13,6 +13,10 @@ final class MockSiteDiaryRepository: SiteDiaryRepository {
         return matches.first { $0.status == .open } ?? matches.first
     }
 
+    func allWorkdays() throws -> [Workday] {
+        workdays.sorted { $0.calendarDate > $1.calendarDate }
+    }
+
     func save(_ workday: Workday) throws {
         if let index = workdays.firstIndex(where: { $0.id == workday.id }) {
             workdays[index] = workday

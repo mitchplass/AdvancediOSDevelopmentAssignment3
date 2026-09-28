@@ -9,7 +9,7 @@ enum OpenTodaysDiaryError: Error, Equatable {
         case .siteNameMissing:
             return "This diary has no site name."
         case .dayAlreadyClosed:
-            return "Today's diary is already closed."
+            return "This day's diary is already closed."
         }
     }
 
@@ -18,7 +18,7 @@ enum OpenTodaysDiaryError: Error, Equatable {
         case .siteNameMissing:
             return "Enter the site name before you open the day."
         case .dayAlreadyClosed:
-            return "Today is finished. Open a diary for another date instead of starting a second one."
+            return "That day is finished. Open a diary for another date instead of starting a second one."
         }
     }
 }
