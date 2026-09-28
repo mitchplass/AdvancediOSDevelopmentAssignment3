@@ -6,6 +6,7 @@ struct CoreDataSiteDiaryRepository: SiteDiaryRepository {
 
     init(persistence: PersistenceController = .shared) {
         context = persistence.container.viewContext
+        try? publishTodaysGlance()
     }
 
     func workday(on day: Date) throws -> Workday? {
@@ -194,11 +195,30 @@ struct CoreDataSiteDiaryRepository: SiteDiaryRepository {
     }
 
     private func saveContext() throws {
-        guard context.hasChanges else { return }
-        do {
-            try context.save()
-        } catch {
-            throw SiteDiaryStoreError.saveFailed
+        if context.hasChanges {
+            do {
+                try context.save()
+            } catch {
+                throw SiteDiaryStoreError.saveFailed
+            }
         }
+        try publishTodaysGlance()
+    }
+
+    private func publishTodaysGlance() throws {
+        let today = Date()
+        let workday = try workday(on: today)
+        let knockOffDefects: [Defect]
+        let crewOnSite: [CrewPresence]
+        if let workday {
+            knockOffDefects = try openKnockOffDefects(on: today)
+            crewOnSite = try crew(for: workday.id)
+        } else {
+            knockOffDefects = []
+            crewOnSite = []
+        }
+        try SiteDiaryGlanceStore.write(
+            SiteDiaryGlance.recording(workday: workday, knockOffDefects: knockOffDefects, crew: crewOnSite)
+        )
     }
 }

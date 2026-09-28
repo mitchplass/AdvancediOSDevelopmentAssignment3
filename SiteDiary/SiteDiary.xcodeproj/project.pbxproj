@@ -14,19 +14,11 @@
 			remoteGlobalIDString = E4A774AC3068D2E500E23B45;
 			remoteInfo = SiteDiary;
 		};
-		E4A774CA3068D2E700E23B45 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = E4A774A53068D2E500E23B45 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = E4A774AC3068D2E500E23B45;
-			remoteInfo = SiteDiary;
-		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		E4A774AD3068D2E500E23B45 /* SiteDiary.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SiteDiary.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E4A774BF3068D2E700E23B45 /* SiteDiaryTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SiteDiaryTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		E4A774C93068D2E700E23B45 /* SiteDiaryUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SiteDiaryUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -40,9 +32,9 @@
 			path = SiteDiaryTests;
 			sourceTree = "<group>";
 		};
-		E4A774CC3068D2E700E23B45 /* SiteDiaryUITests */ = {
+		F1A775033068D2E500E23B46 /* SiteDiaryShared */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = SiteDiaryUITests;
+			path = SiteDiaryShared;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -62,13 +54,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		E4A774C63068D2E700E23B45 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -76,8 +61,8 @@
 			isa = PBXGroup;
 			children = (
 				E4A774AF3068D2E500E23B45 /* SiteDiary */,
+				F1A775033068D2E500E23B46 /* SiteDiaryShared */,
 				E4A774C23068D2E700E23B45 /* SiteDiaryTests */,
-				E4A774CC3068D2E700E23B45 /* SiteDiaryUITests */,
 				E4A774AE3068D2E500E23B45 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -87,7 +72,6 @@
 			children = (
 				E4A774AD3068D2E500E23B45 /* SiteDiary.app */,
 				E4A774BF3068D2E700E23B45 /* SiteDiaryTests.xctest */,
-				E4A774C93068D2E700E23B45 /* SiteDiaryUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -109,6 +93,7 @@
 			);
 			fileSystemSynchronizedGroups = (
 				E4A774AF3068D2E500E23B45 /* SiteDiary */,
+				F1A775033068D2E500E23B46 /* SiteDiaryShared */,
 			);
 			name = SiteDiary;
 			packageProductDependencies = (
@@ -140,29 +125,6 @@
 			productReference = E4A774BF3068D2E700E23B45 /* SiteDiaryTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		E4A774C83068D2E700E23B45 /* SiteDiaryUITests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = E4A774D93068D2E700E23B45 /* Build configuration list for PBXNativeTarget "SiteDiaryUITests" */;
-			buildPhases = (
-				E4A774C53068D2E700E23B45 /* Sources */,
-				E4A774C63068D2E700E23B45 /* Frameworks */,
-				E4A774C73068D2E700E23B45 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				E4A774CB3068D2E700E23B45 /* PBXTargetDependency */,
-			);
-			fileSystemSynchronizedGroups = (
-				E4A774CC3068D2E700E23B45 /* SiteDiaryUITests */,
-			);
-			name = SiteDiaryUITests;
-			packageProductDependencies = (
-			);
-			productName = SiteDiaryUITests;
-			productReference = E4A774C93068D2E700E23B45 /* SiteDiaryUITests.xctest */;
-			productType = "com.apple.product-type.bundle.ui-testing";
-		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -177,10 +139,6 @@
 						CreatedOnToolsVersion = 26.3;
 					};
 					E4A774BE3068D2E700E23B45 = {
-						CreatedOnToolsVersion = 26.3;
-						TestTargetID = E4A774AC3068D2E500E23B45;
-					};
-					E4A774C83068D2E700E23B45 = {
 						CreatedOnToolsVersion = 26.3;
 						TestTargetID = E4A774AC3068D2E500E23B45;
 					};
@@ -202,7 +160,6 @@
 			targets = (
 				E4A774AC3068D2E500E23B45 /* SiteDiary */,
 				E4A774BE3068D2E700E23B45 /* SiteDiaryTests */,
-				E4A774C83068D2E700E23B45 /* SiteDiaryUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -216,13 +173,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		E4A774BD3068D2E700E23B45 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		E4A774C73068D2E700E23B45 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -246,13 +196,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		E4A774C53068D2E700E23B45 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -260,11 +203,6 @@
 			isa = PBXTargetDependency;
 			target = E4A774AC3068D2E500E23B45 /* SiteDiary */;
 			targetProxy = E4A774C03068D2E700E23B45 /* PBXContainerItemProxy */;
-		};
-		E4A774CB3068D2E700E23B45 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = E4A774AC3068D2E500E23B45 /* SiteDiary */;
-			targetProxy = E4A774CA3068D2E700E23B45 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -500,46 +438,6 @@
 			};
 			name = Release;
 		};
-		E4A774DA3068D2E700E23B45 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 4V28M9347U;
-				GENERATE_INFOPLIST_FILE = YES;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.iosdev.SiteDiaryUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				STRING_CATALOG_GENERATE_SYMBOLS = NO;
-				SWIFT_APPROACHABLE_CONCURRENCY = YES;
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = SiteDiary;
-			};
-			name = Debug;
-		};
-		E4A774DB3068D2E700E23B45 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 4V28M9347U;
-				GENERATE_INFOPLIST_FILE = YES;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.iosdev.SiteDiaryUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				STRING_CATALOG_GENERATE_SYMBOLS = NO;
-				SWIFT_APPROACHABLE_CONCURRENCY = YES;
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = SiteDiary;
-			};
-			name = Release;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -566,15 +464,6 @@
 			buildConfigurations = (
 				E4A774D73068D2E700E23B45 /* Debug */,
 				E4A774D83068D2E700E23B45 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		E4A774D93068D2E700E23B45 /* Build configuration list for PBXNativeTarget "SiteDiaryUITests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				E4A774DA3068D2E700E23B45 /* Debug */,
-				E4A774DB3068D2E700E23B45 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
