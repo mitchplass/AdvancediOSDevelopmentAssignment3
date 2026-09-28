@@ -25,7 +25,13 @@ extension SiteDiaryGlance {
             firstKnockOffLocation: knockOffDefects.first?.location,
             crewOnSiteCount: crew.filter(\.isOnSite).count,
             dayIsOpen: workday.status == .open,
-            hasDiary: true
+            hasDiary: true,
+            knockOffLines: knockOffDefects.prefix(6).map {
+                KnockOffGlanceLine(title: $0.title, location: $0.location)
+            },
+            crewLines: crew.filter(\.isOnSite).prefix(8).map {
+                CrewGlanceLine(name: $0.workerName, trade: $0.trade)
+            }
         )
     }
 

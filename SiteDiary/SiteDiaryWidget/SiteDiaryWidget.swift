@@ -15,7 +15,7 @@ struct SiteDiaryGlanceWidget: Widget {
         }
         .configurationDisplayName("Site diary")
         .description("Knock-off defects and who is still on site for the day you have open.")
-        .supportedFamilies([.systemSmall, .systemMedium])
+        .supportedFamilies([.systemSmall, .systemMedium, .systemLarge])
     }
 }
 
@@ -45,9 +45,17 @@ struct SiteDiaryGlanceProvider: TimelineProvider {
         calendarDate: Date(),
         knockOffDefectCount: 2,
         firstKnockOffLocation: "Level 2, grid C4",
-        crewOnSiteCount: 4,
+        crewOnSiteCount: 2,
         dayIsOpen: true,
-        hasDiary: true
+        hasDiary: true,
+        knockOffLines: [
+            KnockOffGlanceLine(title: "Exposed starter bars", location: "Level 2, grid C4"),
+            KnockOffGlanceLine(title: "Missing handrail", location: "Level 3 stair")
+        ],
+        crewLines: [
+            CrewGlanceLine(name: "Alex", trade: "Electrical"),
+            CrewGlanceLine(name: "Sam", trade: "Formwork")
+        ]
     )
 }
 
@@ -79,20 +87,18 @@ struct SiteDiaryGlanceView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
     }
 
+    @ViewBuilder
     private func diary(_ glance: SiteDiaryGlance) -> some View {
+        if family == .systemLarge {
+            largeDiary(glance)
+        } else {
+            compactDiary(glance)
+        }
+    }
+
+    private func compactDiary(_ glance: SiteDiaryGlance) -> some View {
         VStack(alignment: .leading, spacing: 4) {
-            HStack(alignment: .firstTextBaseline) {
-                Text(glance.siteName)
-                    .font(.headline)
-                    .lineLimit(1)
-                Spacer(minLength: 8)
-                Text(glance.dayIsOpen ? "Open" : "Closed")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-            }
-            Text(glance.calendarDate.formatted(date: .abbreviated, time: .omitted))
-                .font(.caption)
-                .foregroundStyle(.secondary)
+            header(glance)
             Text(knockOffLine(glance))
                 .font(family == .systemSmall ? .subheadline : .body)
                 .lineLimit(2)
@@ -108,6 +114,78 @@ struct SiteDiaryGlanceView: View {
                 .foregroundStyle(.secondary)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+    }
+
+    private func largeDiary(_ glance: SiteDiaryGlance) -> some View {
+        VStack(alignment: .leading, spacing: 12) {
+            header(glance)
+            VStack(alignment: .leading, spacing: 6) {
+                Text("Before knock-off")
+                    .font(.subheadline.weight(.semibold))
+                if glance.knockOffLines.isEmpty {
+                    Text("Nothing to clear before knock-off")
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                } else {
+                    ForEach(Array(glance.knockOffLines.prefix(4).enumerated()), id: \.offset) { _, line in
+                        VStack(alignment: .leading, spacing: 1) {
+                            Text(line.title)
+                                .font(.subheadline)
+                                .lineLimit(1)
+                            Text(line.location)
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                                .lineLimit(1)
+                        }
+                    }
+                    if glance.knockOffDefectCount > 4 {
+                        Text("\(glance.knockOffDefectCount - 4) more")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
+                }
+            }
+            VStack(alignment: .leading, spacing: 6) {
+                Text("On site")
+                    .font(.subheadline.weight(.semibold))
+                if glance.crewLines.isEmpty {
+                    Text("Crew signed off")
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                } else {
+                    ForEach(Array(glance.crewLines.prefix(4).enumerated()), id: \.offset) { _, person in
+                        Text("\(person.name), \(person.trade)")
+                            .font(.subheadline)
+                            .lineLimit(1)
+                    }
+                    if glance.crewOnSiteCount > 4 {
+                        Text("\(glance.crewOnSiteCount - 4) more")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
+                }
+            }
+            Spacer(minLength: 0)
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+    }
+
+    private func header(_ glance: SiteDiaryGlance) -> some View {
+        VStack(alignment: .leading, spacing: 2) {
+            HStack(alignment: .firstTextBaseline) {
+                Text(glance.siteName)
+                    .font(.headline)
+                    .lineLimit(1)
+                Spacer(minLength: 8)
+                Text(glance.dayIsOpen ? "Open" : "Closed")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+            Text(glance.calendarDate.formatted(date: family == .systemLarge ? .complete : .abbreviated, time: .omitted))
+                .font(.caption)
+                .foregroundStyle(.secondary)
+                .lineLimit(1)
+        }
     }
 
     private func knockOffLine(_ glance: SiteDiaryGlance) -> String {
