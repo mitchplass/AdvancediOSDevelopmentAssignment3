@@ -40,18 +40,14 @@ struct TodayOnSiteView: View {
                 }
 
                 Section {
-                    LabeledContent("Knock-off defects", value: "\(model.knockOffDefectCount)")
-                    LabeledContent("Crew on site", value: "\(model.crewOnSiteCount)")
-                    NavigationLink("Defects") {
-                        DefectListScreen()
+                    NavigationLink(value: SiteDiaryPage.defects) {
+                        LabeledContent("Knock-off defects", value: "\(model.knockOffDefectCount)")
                     }
-                    NavigationLink("Crew on site") {
-                        CrewOnSiteScreen()
+                    NavigationLink(value: SiteDiaryPage.crew) {
+                        LabeledContent("Crew on site", value: "\(model.crewOnSiteCount)")
                     }
                     if workday.status == .open {
-                        NavigationLink("Close out the day") {
-                            CloseOutScreen()
-                        }
+                        NavigationLink("Close out the day", value: SiteDiaryPage.closeOut)
                     }
                 }
             } else {

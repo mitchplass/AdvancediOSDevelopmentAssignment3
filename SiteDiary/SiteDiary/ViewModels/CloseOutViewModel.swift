@@ -6,6 +6,7 @@ final class CloseOutViewModel {
     var remaining: [Defect] = []
     var isClosed = false
     var hasOpenDiary = false
+    var didClose = false
     var notice: DiaryNotice?
 
     var canClose: Bool {
@@ -38,6 +39,7 @@ final class CloseOutViewModel {
         notice = nil
         do {
             _ = try CloseOutWorkday(repository: repository).close()
+            didClose = true
             load()
         } catch let error as CloseOutWorkdayError {
             notice = DiaryNotice(whatWentWrong: error.whatWentWrong, whatToDoNext: error.whatToDoNext)

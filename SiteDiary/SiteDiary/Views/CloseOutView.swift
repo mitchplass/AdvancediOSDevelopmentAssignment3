@@ -22,6 +22,7 @@ private struct CloseOutHost: View {
 
 struct CloseOutView: View {
     @Bindable var model: CloseOutViewModel
+    @Environment(\.dismiss) private var dismiss
 
     var body: some View {
         List {
@@ -65,6 +66,11 @@ struct CloseOutView: View {
         .navigationTitle("Close out the day")
         .onAppear {
             model.load()
+        }
+        .onChange(of: model.didClose) { _, didClose in
+            if didClose {
+                dismiss()
+            }
         }
     }
 }

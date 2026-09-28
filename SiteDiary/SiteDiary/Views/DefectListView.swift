@@ -22,6 +22,7 @@ private struct DefectListHost: View {
 
 struct DefectListView: View {
     @Bindable var model: DefectListViewModel
+    @State private var isRecordingDefect = false
 
     var body: some View {
         List {
@@ -57,11 +58,14 @@ struct DefectListView: View {
             }
         }
         .navigationTitle("Defects")
+        .navigationDestination(isPresented: $isRecordingDefect) {
+            RecordDefectScreen()
+        }
         .toolbar {
             if model.canRecord {
                 ToolbarItem(placement: .primaryAction) {
-                    NavigationLink("Record a defect") {
-                        RecordDefectScreen()
+                    Button("Record a defect") {
+                        isRecordingDefect = true
                     }
                 }
             }

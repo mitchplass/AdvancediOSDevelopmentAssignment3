@@ -98,6 +98,7 @@ private struct CrewRow: View {
             Spacer()
             if canSignOff {
                 Button("Sign off", action: signOff)
+                    .buttonStyle(.borderless)
             }
         }
     }
