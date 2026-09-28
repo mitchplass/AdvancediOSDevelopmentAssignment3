@@ -2,17 +2,18 @@ import SwiftUI
 
 struct CrewOnSiteScreen: View {
     @Environment(\.siteDiaryRepository) private var repository
+    var day: Date
 
     var body: some View {
-        CrewOnSiteHost(repository: repository)
+        CrewOnSiteHost(repository: repository, day: day)
     }
 }
 
 private struct CrewOnSiteHost: View {
     @State private var model: CrewOnSiteViewModel
 
-    init(repository: any SiteDiaryRepository) {
-        _model = State(initialValue: CrewOnSiteViewModel(repository: repository))
+    init(repository: any SiteDiaryRepository, day: Date) {
+        _model = State(initialValue: CrewOnSiteViewModel(repository: repository, day: day))
     }
 
     var body: some View {
@@ -43,8 +44,13 @@ struct CrewOnSiteView: View {
             if !model.onSite.isEmpty {
                 Section("On site") {
                     ForEach(model.onSite) { person in
-                        CrewRow(person: person, canSignOff: model.canSignOn) {
-                            model.signOff(person)
+                        CrewRow(name: person.workerName, trade: person.trade) {
+                            if model.canSignOn {
+                                Button("Sign off") {
+                                    model.signOff(person)
+                                }
+                                .buttonStyle(.borderless)
+                            }
                         }
                     }
                 }
@@ -82,24 +88,21 @@ struct CrewOnSiteView: View {
     }
 }
 
-private struct CrewRow: View {
-    let person: CrewPresence
-    let canSignOff: Bool
-    let signOff: () -> Void
+private struct CrewRow<Action: View>: View {
+    let name: String
+    let trade: String
+    @ViewBuilder var action: () -> Action
 
     var body: some View {
         HStack {
             VStack(alignment: .leading, spacing: 4) {
-                Text(person.workerName)
-                Text(person.trade)
+                Text(name)
+                Text(trade)
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
             }
             Spacer()
-            if canSignOff {
-                Button("Sign off", action: signOff)
-                    .buttonStyle(.borderless)
-            }
+            action()
         }
     }
 }

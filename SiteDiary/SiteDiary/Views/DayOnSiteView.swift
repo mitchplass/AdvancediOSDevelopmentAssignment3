@@ -1,27 +1,28 @@
 import SwiftUI
 
-struct TodayOnSiteScreen: View {
+struct DayOnSiteScreen: View {
     @Environment(\.siteDiaryRepository) private var repository
+    var day: Date
 
     var body: some View {
-        TodayOnSiteHost(repository: repository)
+        DayOnSiteHost(repository: repository, day: day)
     }
 }
 
-private struct TodayOnSiteHost: View {
-    @State private var model: TodayOnSiteViewModel
+private struct DayOnSiteHost: View {
+    @State private var model: DayOnSiteViewModel
 
-    init(repository: any SiteDiaryRepository) {
-        _model = State(initialValue: TodayOnSiteViewModel(repository: repository))
+    init(repository: any SiteDiaryRepository, day: Date) {
+        _model = State(initialValue: DayOnSiteViewModel(repository: repository, day: day))
     }
 
     var body: some View {
-        TodayOnSiteView(model: model)
+        DayOnSiteView(model: model)
     }
 }
 
-struct TodayOnSiteView: View {
-    @Bindable var model: TodayOnSiteViewModel
+struct DayOnSiteView: View {
+    @Bindable var model: DayOnSiteViewModel
 
     var body: some View {
         Form {
@@ -40,32 +41,28 @@ struct TodayOnSiteView: View {
                 }
 
                 Section {
-                    NavigationLink(value: SiteDiaryPage.defects) {
+                    NavigationLink {
+                        DefectListScreen(day: model.day)
+                    } label: {
                         LabeledContent("Knock-off defects", value: "\(model.knockOffDefectCount)")
                     }
-                    NavigationLink(value: SiteDiaryPage.crew) {
+                    NavigationLink {
+                        CrewOnSiteScreen(day: model.day)
+                    } label: {
                         LabeledContent("Crew on site", value: "\(model.crewOnSiteCount)")
                     }
                     if workday.status == .open {
-                        NavigationLink("Close out the day", value: SiteDiaryPage.closeOut)
+                        NavigationLink("Close out the day") {
+                            CloseOutScreen(day: model.day)
+                        }
                     }
                 }
             } else {
-                Section {
-                    Text("Open the day before you walk the site.")
-                        .foregroundStyle(.secondary)
-                    TextField("Site name", text: $model.siteName)
-                        .textInputAutocapitalization(.words)
-                    DatePicker("Knock-off", selection: $model.knockOffTime, displayedComponents: .hourAndMinute)
-                    Button("Open the day") {
-                        model.openTheDay()
-                    }
-                } header: {
-                    Text("No diary for today yet")
-                }
+                Text("This day is not in the diary.")
+                    .foregroundStyle(.secondary)
             }
         }
-        .navigationTitle("Today on site")
+        .navigationTitle(model.day.formatted(date: .abbreviated, time: .omitted))
         .onAppear {
             model.load()
         }

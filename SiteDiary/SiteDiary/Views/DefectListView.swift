@@ -2,17 +2,18 @@ import SwiftUI
 
 struct DefectListScreen: View {
     @Environment(\.siteDiaryRepository) private var repository
+    var day: Date
 
     var body: some View {
-        DefectListHost(repository: repository)
+        DefectListHost(repository: repository, day: day)
     }
 }
 
 private struct DefectListHost: View {
     @State private var model: DefectListViewModel
 
-    init(repository: any SiteDiaryRepository) {
-        _model = State(initialValue: DefectListViewModel(repository: repository))
+    init(repository: any SiteDiaryRepository, day: Date) {
+        _model = State(initialValue: DefectListViewModel(repository: repository, day: day))
     }
 
     var body: some View {
@@ -22,7 +23,6 @@ private struct DefectListHost: View {
 
 struct DefectListView: View {
     @Bindable var model: DefectListViewModel
-    @State private var isRecordingDefect = false
 
     var body: some View {
         List {
@@ -58,14 +58,11 @@ struct DefectListView: View {
             }
         }
         .navigationTitle("Defects")
-        .navigationDestination(isPresented: $isRecordingDefect) {
-            RecordDefectScreen()
-        }
         .toolbar {
             if model.canRecord {
                 ToolbarItem(placement: .primaryAction) {
-                    Button("Record a defect") {
-                        isRecordingDefect = true
+                    NavigationLink("Record a defect") {
+                        RecordDefectScreen(day: model.day)
                     }
                 }
             }

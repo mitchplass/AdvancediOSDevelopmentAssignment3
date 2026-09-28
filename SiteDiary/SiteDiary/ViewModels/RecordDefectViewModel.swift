@@ -9,10 +9,12 @@ final class RecordDefectViewModel {
     var mustClearBeforeKnockOff = true
     var notice: DiaryNotice?
 
+    private let day: Date
     private let repository: any SiteDiaryRepository
 
-    init(repository: any SiteDiaryRepository) {
+    init(repository: any SiteDiaryRepository, day: Date) {
         self.repository = repository
+        self.day = day
     }
 
     func record() -> Bool {
@@ -22,7 +24,8 @@ final class RecordDefectViewModel {
                 title: title,
                 location: location,
                 detail: detail,
-                mustClearBeforeKnockOff: mustClearBeforeKnockOff
+                mustClearBeforeKnockOff: mustClearBeforeKnockOff,
+                on: day
             )
             return true
         } catch let error as TrackDefectError {

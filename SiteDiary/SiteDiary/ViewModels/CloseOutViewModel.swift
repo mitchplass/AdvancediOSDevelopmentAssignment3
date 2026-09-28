@@ -14,15 +14,17 @@ final class CloseOutViewModel {
         hasOpenDiary && remaining.isEmpty && crewStillOnSite.isEmpty
     }
 
+    private let day: Date
     private let repository: any SiteDiaryRepository
 
-    init(repository: any SiteDiaryRepository) {
+    init(repository: any SiteDiaryRepository, day: Date) {
         self.repository = repository
+        self.day = day
     }
 
     func load() {
         do {
-            guard let workday = try repository.workday(on: Date()) else {
+            guard let workday = try repository.workday(on: day) else {
                 remaining = []
                 crewStillOnSite = []
                 isClosed = false
@@ -31,7 +33,7 @@ final class CloseOutViewModel {
             }
             isClosed = workday.status == .closed
             hasOpenDiary = workday.status == .open
-            remaining = isClosed ? [] : try repository.openKnockOffDefects(on: Date())
+            remaining = isClosed ? [] : try repository.openKnockOffDefects(on: day)
             crewStillOnSite = isClosed ? [] : try repository.crew(for: workday.id).filter(\.isOnSite)
         } catch {
             notice = DiaryFeedback.couldNotReadDiary
@@ -41,7 +43,7 @@ final class CloseOutViewModel {
     func closeOut() {
         notice = nil
         do {
-            _ = try CloseOutWorkday(repository: repository).close()
+            _ = try CloseOutWorkday(repository: repository).close(on: day)
             didClose = true
             load()
         } catch let error as CloseOutWorkdayError {

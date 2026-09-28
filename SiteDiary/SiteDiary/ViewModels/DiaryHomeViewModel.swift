@@ -2,56 +2,62 @@ import Foundation
 import Observation
 
 @Observable
-final class TodayOnSiteViewModel {
+final class DiaryHomeViewModel {
+    var days: [Workday] = []
     var siteName = ""
+    var diaryDate: Date
     var knockOffTime: Date
-    var workday: Workday?
-    var knockOffDefectCount = 0
-    var crewOnSiteCount = 0
     var notice: DiaryNotice?
 
     private let repository: any SiteDiaryRepository
 
     init(repository: any SiteDiaryRepository, now: Date = Date()) {
         self.repository = repository
+        diaryDate = SiteCalendar.startOfDay(for: now)
         knockOffTime = Self.defaultKnockOffTime(on: now)
     }
 
     func load() {
         do {
-            let today = Date()
-            workday = try repository.workday(on: today)
-            if let workday {
-                knockOffDefectCount = try repository.openKnockOffDefects(on: today).count
-                crewOnSiteCount = try repository.crew(for: workday.id).filter(\.isOnSite).count
-            } else {
-                knockOffDefectCount = 0
-                crewOnSiteCount = 0
-            }
+            days = try repository.allWorkdays()
         } catch {
             notice = DiaryFeedback.couldNotReadDiary
         }
     }
 
-    func openTheDay() {
+    func openTheDay() -> Date? {
         notice = nil
+        let day = SiteCalendar.startOfDay(for: diaryDate)
         do {
-            workday = try OpenTodaysDiary(repository: repository).open(
+            _ = try OpenTodaysDiary(repository: repository).open(
                 siteName: siteName,
-                knockOffTime: knockOffTime
+                knockOffTime: Self.knockOffTime(on: day, clock: knockOffTime),
+                on: day
             )
             load()
+            return day
         } catch let error as OpenTodaysDiaryError {
             notice = DiaryNotice(whatWentWrong: error.whatWentWrong, whatToDoNext: error.whatToDoNext)
+            return nil
         } catch {
             notice = DiaryFeedback.couldNotSaveDiary
+            return nil
         }
     }
 
     private static func defaultKnockOffTime(on day: Date) -> Date {
+        knockOffTime(on: day, hour: 15, minute: 30)
+    }
+
+    private static func knockOffTime(on day: Date, clock: Date) -> Date {
+        let time = SiteCalendar.calendar.dateComponents([.hour, .minute], from: clock)
+        return knockOffTime(on: day, hour: time.hour ?? 15, minute: time.minute ?? 30)
+    }
+
+    private static func knockOffTime(on day: Date, hour: Int, minute: Int) -> Date {
         var components = SiteCalendar.calendar.dateComponents([.year, .month, .day], from: day)
-        components.hour = 15
-        components.minute = 30
+        components.hour = hour
+        components.minute = minute
         return SiteCalendar.calendar.date(from: components) ?? day
     }
 }

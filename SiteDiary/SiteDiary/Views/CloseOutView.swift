@@ -2,17 +2,18 @@ import SwiftUI
 
 struct CloseOutScreen: View {
     @Environment(\.siteDiaryRepository) private var repository
+    var day: Date
 
     var body: some View {
-        CloseOutHost(repository: repository)
+        CloseOutHost(repository: repository, day: day)
     }
 }
 
 private struct CloseOutHost: View {
     @State private var model: CloseOutViewModel
 
-    init(repository: any SiteDiaryRepository) {
-        _model = State(initialValue: CloseOutViewModel(repository: repository))
+    init(repository: any SiteDiaryRepository, day: Date) {
+        _model = State(initialValue: CloseOutViewModel(repository: repository, day: day))
     }
 
     var body: some View {

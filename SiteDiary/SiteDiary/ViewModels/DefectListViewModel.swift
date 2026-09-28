@@ -8,15 +8,17 @@ final class DefectListViewModel {
     var canRecord = false
     var notice: DiaryNotice?
 
+    let day: Date
     private let repository: any SiteDiaryRepository
 
-    init(repository: any SiteDiaryRepository) {
+    init(repository: any SiteDiaryRepository, day: Date) {
         self.repository = repository
+        self.day = day
     }
 
     func load() {
         do {
-            guard let workday = try repository.workday(on: Date()) else {
+            guard let workday = try repository.workday(on: day) else {
                 knockOffDefects = []
                 otherDefects = []
                 canRecord = false

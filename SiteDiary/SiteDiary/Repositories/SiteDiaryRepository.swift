@@ -8,6 +8,7 @@ enum SiteDiaryStoreError: Error, Equatable {
 
 protocol SiteDiaryRepository {
     func workday(on day: Date) throws -> Workday?
+    func allWorkdays() throws -> [Workday]
     func save(_ workday: Workday) throws
 
     func defect(id: UUID) throws -> Defect?

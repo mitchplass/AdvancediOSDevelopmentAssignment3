@@ -10,15 +10,17 @@ final class CrewOnSiteViewModel {
     var canSignOn = false
     var notice: DiaryNotice?
 
+    private let day: Date
     private let repository: any SiteDiaryRepository
 
-    init(repository: any SiteDiaryRepository) {
+    init(repository: any SiteDiaryRepository, day: Date) {
         self.repository = repository
+        self.day = day
     }
 
     func load() {
         do {
-            guard let workday = try repository.workday(on: Date()) else {
+            guard let workday = try repository.workday(on: day) else {
                 onSite = []
                 signedOff = []
                 canSignOn = false
@@ -36,7 +38,7 @@ final class CrewOnSiteViewModel {
     func signOn() {
         notice = nil
         do {
-            _ = try SignCrew(repository: repository).signOn(workerName: workerName, trade: trade)
+            _ = try SignCrew(repository: repository).signOn(workerName: workerName, trade: trade, on: day)
             workerName = ""
             trade = ""
             load()

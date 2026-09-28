@@ -46,7 +46,7 @@ final class OpenTodaysDiaryTests: XCTestCase {
             XCTAssertEqual(error as? OpenTodaysDiaryError, .dayAlreadyClosed)
             XCTAssertEqual(
                 OpenTodaysDiaryError.dayAlreadyClosed.whatToDoNext,
-                "Today is finished. Open a diary for another date instead of starting a second one."
+                "That day is finished. Open a diary for another date instead of starting a second one."
             )
         }
         XCTAssertEqual(repository.workdays.count, 1)
