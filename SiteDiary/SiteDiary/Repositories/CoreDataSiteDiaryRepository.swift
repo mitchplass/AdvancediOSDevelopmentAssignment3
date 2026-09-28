@@ -5,9 +5,11 @@ import WidgetKit
 struct CoreDataSiteDiaryRepository: SiteDiaryRepository {
     private let context: NSManagedObjectContext
 
-    init(persistence: PersistenceController = .shared) {
+    init(persistence: PersistenceController = .shared, publishesGlance: Bool = true) {
         context = persistence.container.viewContext
-        try? publishGlance(preferring: nil, openOnly: true)
+        if publishesGlance {
+            try? publishGlance(preferring: nil, openOnly: true)
+        }
     }
 
     func workday(on day: Date) throws -> Workday? {

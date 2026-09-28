@@ -26,7 +26,7 @@ struct SiteDiaryGlanceEntry: TimelineEntry {
 
 struct SiteDiaryGlanceProvider: TimelineProvider {
     func placeholder(in context: Context) -> SiteDiaryGlanceEntry {
-        SiteDiaryGlanceEntry(date: Date(), glance: nil)
+        SiteDiaryGlanceEntry(date: Date(), glance: SiteDiaryGlanceStore.read() ?? Self.gallerySample)
     }
 
     func getSnapshot(in context: Context, completion: @escaping (SiteDiaryGlanceEntry) -> Void) {
@@ -117,52 +117,42 @@ struct SiteDiaryGlanceView: View {
     }
 
     private func largeDiary(_ glance: SiteDiaryGlance) -> some View {
-        VStack(alignment: .leading, spacing: 10) {
+        VStack(alignment: .leading, spacing: 8) {
             header(glance)
-            VStack(alignment: .leading, spacing: 4) {
-                Text(knockOffLine(glance))
-                    .font(.headline)
-                    .lineLimit(2)
-                if glance.knockOffLines.isEmpty {
-                    if let location = glance.firstKnockOffLocation, glance.knockOffDefectCount > 0 {
-                        Text(location)
-                            .font(.subheadline)
-                            .foregroundStyle(.secondary)
-                            .lineLimit(2)
-                    }
-                } else {
-                    ForEach(Array(glance.knockOffLines.prefix(3).enumerated()), id: \.offset) { _, line in
-                        Text("\(line.title) — \(line.location)")
-                            .font(.subheadline)
-                            .foregroundStyle(.secondary)
-                            .lineLimit(1)
-                    }
-                    if glance.knockOffDefectCount > 3 {
-                        Text("\(glance.knockOffDefectCount - 3) more")
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
-                    }
-                }
-            }
-            VStack(alignment: .leading, spacing: 4) {
-                Text(crewLine(glance))
-                    .font(.headline)
-                if !glance.crewLines.isEmpty {
-                    ForEach(Array(glance.crewLines.prefix(3).enumerated()), id: \.offset) { _, person in
-                        Text("\(person.name), \(person.trade)")
-                            .font(.subheadline)
-                            .lineLimit(1)
-                    }
-                    if glance.crewOnSiteCount > 3 {
-                        Text("\(glance.crewOnSiteCount - 3) more")
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
-                    }
-                }
-            }
+            Text(knockOffLine(glance))
+                .font(.headline)
+                .lineLimit(2)
+            Text(knockOffDetail(glance))
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
+                .lineLimit(4)
+            Text(crewLine(glance))
+                .font(.headline)
+            Text(crewDetail(glance))
+                .font(.subheadline)
+                .lineLimit(4)
             Spacer(minLength: 0)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+    }
+
+    private func knockOffDetail(_ glance: SiteDiaryGlance) -> String {
+        if !glance.knockOffLines.isEmpty {
+            let shown = glance.knockOffLines.prefix(3).map { "\($0.title) — \($0.location)" }
+            let extra = glance.knockOffDefectCount - shown.count
+            return extra > 0 ? (shown + ["\(extra) more"]).joined(separator: "\n") : shown.joined(separator: "\n")
+        }
+        if let location = glance.firstKnockOffLocation, glance.knockOffDefectCount > 0 {
+            return location
+        }
+        return " "
+    }
+
+    private func crewDetail(_ glance: SiteDiaryGlance) -> String {
+        guard !glance.crewLines.isEmpty else { return " " }
+        let shown = glance.crewLines.prefix(3).map { "\($0.name), \($0.trade)" }
+        let extra = glance.crewOnSiteCount - shown.count
+        return extra > 0 ? (shown + ["\(extra) more"]).joined(separator: "\n") : shown.joined(separator: "\n")
     }
 
     private func header(_ glance: SiteDiaryGlance) -> some View {
