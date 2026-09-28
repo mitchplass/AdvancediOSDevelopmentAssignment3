@@ -70,6 +70,41 @@ final class CloseOutWorkdayTests: XCTestCase {
         XCTAssertEqual(try repository.workday(on: today)?.status, .open)
     }
 
+    func testClosingTheDayFailsWhileCrewAreStillSignedOn() throws {
+        let repository = try openDiary()
+        _ = try SignCrew(repository: repository).signOn(
+            workerName: "Alex",
+            trade: "Electrical",
+            on: today,
+            at: recordedAt
+        )
+
+        XCTAssertThrowsError(try CloseOutWorkday(repository: repository).close(on: today)) { error in
+            XCTAssertEqual(error as? CloseOutWorkdayError, .crewStillOnSite(count: 1, names: ["Alex"]))
+            XCTAssertEqual(
+                CloseOutWorkdayError.crewStillOnSite(count: 1, names: ["Alex"]).whatToDoNext,
+                "Sign them off before you close the day. Still on site: Alex."
+            )
+        }
+        XCTAssertEqual(try repository.workday(on: today)?.status, .open)
+    }
+
+    func testClosingTheDaySucceedsOnceTheCrewHasSignedOff() throws {
+        let repository = try openDiary()
+        let crew = SignCrew(repository: repository)
+        let signedOn = try crew.signOn(
+            workerName: "Alex",
+            trade: "Electrical",
+            on: today,
+            at: recordedAt
+        )
+        _ = try crew.signOff(presenceID: signedOn.id, at: knockOff)
+
+        let closed = try CloseOutWorkday(repository: repository).close(on: today)
+
+        XCTAssertEqual(closed.status, .closed)
+    }
+
     private func openDiary() throws -> MockSiteDiaryRepository {
         let repository = MockSiteDiaryRepository()
         _ = try OpenTodaysDiary(repository: repository).open(

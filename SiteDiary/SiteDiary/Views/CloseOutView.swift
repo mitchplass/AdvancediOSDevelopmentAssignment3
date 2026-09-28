@@ -37,19 +37,33 @@ struct CloseOutView: View {
             } else if !model.hasOpenDiary {
                 Text("Open the day before you close it out.")
                     .foregroundStyle(.secondary)
-            } else if model.remaining.isEmpty {
-                Text("Nothing must be cleared before knock-off.")
+            } else if model.canClose {
+                Text("Nothing must be cleared before knock-off, and the crew is signed off.")
                 Button("Close out the day") {
                     model.closeOut()
                 }
             } else {
-                Section("Still open before knock-off") {
-                    ForEach(model.remaining) { defect in
-                        VStack(alignment: .leading, spacing: 4) {
-                            Text(defect.title)
-                            Text(defect.location)
-                                .font(.subheadline)
-                                .foregroundStyle(.secondary)
+                if !model.remaining.isEmpty {
+                    Section("Still open before knock-off") {
+                        ForEach(model.remaining) { defect in
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text(defect.title)
+                                Text(defect.location)
+                                    .font(.subheadline)
+                                    .foregroundStyle(.secondary)
+                            }
+                        }
+                    }
+                }
+                if !model.crewStillOnSite.isEmpty {
+                    Section("Still signed on") {
+                        ForEach(model.crewStillOnSite) { person in
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text(person.workerName)
+                                Text(person.trade)
+                                    .font(.subheadline)
+                                    .foregroundStyle(.secondary)
+                            }
                         }
                     }
                 }
@@ -57,9 +71,9 @@ struct CloseOutView: View {
                     Button("Close out the day") {
                         model.closeOut()
                     }
-                    .disabled(!model.canClose)
+                    .disabled(true)
                 } footer: {
-                    Text("Clear the knock-off defects before you close the day.")
+                    Text(closeOutBlocker)
                 }
             }
         }
@@ -71,6 +85,19 @@ struct CloseOutView: View {
             if didClose {
                 dismiss()
             }
+        }
+    }
+
+    private var closeOutBlocker: String {
+        switch (model.remaining.isEmpty, model.crewStillOnSite.isEmpty) {
+        case (false, false):
+            return "Clear the knock-off defects and sign the crew off before you close the day."
+        case (false, true):
+            return "Clear the knock-off defects before you close the day."
+        case (true, false):
+            return "Sign the crew off before you close the day."
+        case (true, true):
+            return "Open the day before you close it out."
         }
     }
 }
