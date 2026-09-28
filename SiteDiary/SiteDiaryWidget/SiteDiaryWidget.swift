@@ -117,49 +117,44 @@ struct SiteDiaryGlanceView: View {
     }
 
     private func largeDiary(_ glance: SiteDiaryGlance) -> some View {
-        VStack(alignment: .leading, spacing: 12) {
+        VStack(alignment: .leading, spacing: 10) {
             header(glance)
-            VStack(alignment: .leading, spacing: 6) {
-                Text("Before knock-off")
-                    .font(.subheadline.weight(.semibold))
+            VStack(alignment: .leading, spacing: 4) {
+                Text(knockOffLine(glance))
+                    .font(.headline)
+                    .lineLimit(2)
                 if glance.knockOffLines.isEmpty {
-                    Text("Nothing to clear before knock-off")
-                        .font(.subheadline)
-                        .foregroundStyle(.secondary)
-                } else {
-                    ForEach(Array(glance.knockOffLines.prefix(4).enumerated()), id: \.offset) { _, line in
-                        VStack(alignment: .leading, spacing: 1) {
-                            Text(line.title)
-                                .font(.subheadline)
-                                .lineLimit(1)
-                            Text(line.location)
-                                .font(.caption)
-                                .foregroundStyle(.secondary)
-                                .lineLimit(1)
-                        }
+                    if let location = glance.firstKnockOffLocation, glance.knockOffDefectCount > 0 {
+                        Text(location)
+                            .font(.subheadline)
+                            .foregroundStyle(.secondary)
+                            .lineLimit(2)
                     }
-                    if glance.knockOffDefectCount > 4 {
-                        Text("\(glance.knockOffDefectCount - 4) more")
+                } else {
+                    ForEach(Array(glance.knockOffLines.prefix(3).enumerated()), id: \.offset) { _, line in
+                        Text("\(line.title) — \(line.location)")
+                            .font(.subheadline)
+                            .foregroundStyle(.secondary)
+                            .lineLimit(1)
+                    }
+                    if glance.knockOffDefectCount > 3 {
+                        Text("\(glance.knockOffDefectCount - 3) more")
                             .font(.caption)
                             .foregroundStyle(.secondary)
                     }
                 }
             }
-            VStack(alignment: .leading, spacing: 6) {
-                Text("On site")
-                    .font(.subheadline.weight(.semibold))
-                if glance.crewLines.isEmpty {
-                    Text("Crew signed off")
-                        .font(.subheadline)
-                        .foregroundStyle(.secondary)
-                } else {
-                    ForEach(Array(glance.crewLines.prefix(4).enumerated()), id: \.offset) { _, person in
+            VStack(alignment: .leading, spacing: 4) {
+                Text(crewLine(glance))
+                    .font(.headline)
+                if !glance.crewLines.isEmpty {
+                    ForEach(Array(glance.crewLines.prefix(3).enumerated()), id: \.offset) { _, person in
                         Text("\(person.name), \(person.trade)")
                             .font(.subheadline)
                             .lineLimit(1)
                     }
-                    if glance.crewOnSiteCount > 4 {
-                        Text("\(glance.crewOnSiteCount - 4) more")
+                    if glance.crewOnSiteCount > 3 {
+                        Text("\(glance.crewOnSiteCount - 3) more")
                             .font(.caption)
                             .foregroundStyle(.secondary)
                     }
