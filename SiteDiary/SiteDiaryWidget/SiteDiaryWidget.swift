@@ -14,7 +14,7 @@ struct SiteDiaryGlanceWidget: Widget {
             SiteDiaryGlanceView(entry: entry)
         }
         .configurationDisplayName("Site diary")
-        .description("Knock-off defects and who is still on site today.")
+        .description("Knock-off defects and who is still on site for the day you have open.")
         .supportedFamilies([.systemSmall, .systemMedium])
     }
 }
@@ -70,9 +70,9 @@ struct SiteDiaryGlanceView: View {
         VStack(alignment: .leading, spacing: 6) {
             Text("Site diary")
                 .font(.headline)
-            Text("No diary for today.")
+            Text("No day is open.")
                 .font(.subheadline)
-            Text("Open the day before you walk the site.")
+            Text("Open a day before you walk the site.")
                 .font(.caption)
                 .foregroundStyle(.secondary)
         }
@@ -90,6 +90,9 @@ struct SiteDiaryGlanceView: View {
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
+            Text(glance.calendarDate.formatted(date: .abbreviated, time: .omitted))
+                .font(.caption)
+                .foregroundStyle(.secondary)
             Text(knockOffLine(glance))
                 .font(family == .systemSmall ? .subheadline : .body)
                 .lineLimit(2)

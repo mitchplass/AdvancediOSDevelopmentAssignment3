@@ -28,4 +28,16 @@ extension SiteDiaryGlance {
             hasDiary: true
         )
     }
+
+    static func workingWorkday(among days: [Workday], preferring preferredDay: Date?, openOnly: Bool) -> Workday? {
+        if let preferredDay {
+            let start = SiteCalendar.startOfDay(for: preferredDay)
+            if let match = days.first(where: { SiteCalendar.startOfDay(for: $0.calendarDate) == start }) {
+                if !openOnly || match.status == .open {
+                    return match
+                }
+            }
+        }
+        return days.filter { $0.status == .open }.max { $0.calendarDate < $1.calendarDate }
+    }
 }
