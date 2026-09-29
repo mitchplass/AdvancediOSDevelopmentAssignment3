@@ -4,8 +4,8 @@ import UserNotifications
 enum KnockOffWarning {
     static let category = "KNOCK_OFF_WARNING"
     static let requestIdentifier = "knock-off-warning"
-    static let leadTime: TimeInterval = 30 * 60
     static let nearTermDelay: TimeInterval = 60
+    static let knockOffTimeKey = "knockOffTime"
 
     struct Plan: Equatable {
         var firesAt: Date
@@ -13,30 +13,62 @@ enum KnockOffWarning {
     }
 
     static func plan(knockOffTime: Date, now: Date) -> Plan {
-        let intended = knockOffTime.addingTimeInterval(-leadTime)
-        if intended > now {
-            return Plan(firesAt: intended, isNearTerm: false)
+        if knockOffTime > now {
+            return Plan(firesAt: knockOffTime, isNearTerm: false)
         }
         return Plan(firesAt: now.addingTimeInterval(nearTermDelay), isNearTerm: true)
+    }
+
+    static func body(openKnockOffCount: Int, crewOnSiteCount: Int) -> String {
+        switch (openKnockOffCount > 0, crewOnSiteCount > 0) {
+        case (false, false):
+            return "Knock-off has passed. Nothing is left open, and the crew has signed off."
+        case (true, false):
+            if openKnockOffCount == 1 {
+                return "Knock-off has passed. 1 knock-off defect is still open."
+            }
+            return "Knock-off has passed. \(openKnockOffCount) knock-off defects are still open."
+        case (false, true):
+            if crewOnSiteCount == 1 {
+                return "Knock-off has passed. 1 person is still signed on."
+            }
+            return "Knock-off has passed. \(crewOnSiteCount) people are still signed on."
+        case (true, true):
+            let defects = openKnockOffCount == 1
+                ? "1 knock-off defect is still open"
+                : "\(openKnockOffCount) knock-off defects are still open"
+            let crew = crewOnSiteCount == 1
+                ? "1 person is still signed on"
+                : "\(crewOnSiteCount) people are still signed on"
+            return "Knock-off has passed. \(defects), and \(crew)."
+        }
     }
 }
 
 enum KnockOffWarningScheduler {
     private static var generation = 0
 
-    static func schedule(for workday: Workday?, openKnockOffCount: Int, now: Date = Date()) {
+    static func schedule(
+        for workday: Workday?,
+        openKnockOffCount: Int,
+        crewOnSiteCount: Int,
+        now: Date = Date()
+    ) {
         generation += 1
         let token = generation
-        guard let workday, workday.status == .open, openKnockOffCount > 0 else {
-            UNUserNotificationCenter.current().removePendingNotificationRequests(
-                withIdentifiers: [KnockOffWarning.requestIdentifier]
-            )
+        let center = UNUserNotificationCenter.current()
+        guard let workday else {
+            center.removePendingNotificationRequests(withIdentifiers: [KnockOffWarning.requestIdentifier])
             return
         }
 
         let siteName = workday.siteName
-        let plan = KnockOffWarning.plan(knockOffTime: workday.knockOffTime, now: now)
-        let center = UNUserNotificationCenter.current()
+        let knockOffTime = workday.knockOffTime
+        let plan = KnockOffWarning.plan(knockOffTime: knockOffTime, now: now)
+        let body = KnockOffWarning.body(
+            openKnockOffCount: openKnockOffCount,
+            crewOnSiteCount: crewOnSiteCount
+        )
         center.setNotificationCategories([
             UNNotificationCategory(
                 identifier: KnockOffWarning.category,
@@ -45,14 +77,31 @@ enum KnockOffWarningScheduler {
                 options: []
             )
         ])
-        center.getNotificationSettings { settings in
-            let status = settings.authorizationStatus
+
+        if plan.isNearTerm {
+            center.getDeliveredNotifications { delivered in
+                let alreadySent = delivered.contains { notification in
+                    Self.matches(notification, knockOffTime: knockOffTime)
+                }
+                Task { @MainActor in
+                    guard token == generation, !alreadySent else { return }
+                    await deliver(
+                        siteName: siteName,
+                        body: body,
+                        knockOffTime: knockOffTime,
+                        plan: plan,
+                        token: token,
+                        center: center
+                    )
+                }
+            }
+        } else {
             Task { @MainActor in
                 guard token == generation else { return }
                 await deliver(
-                    status: status,
                     siteName: siteName,
-                    openKnockOffCount: openKnockOffCount,
+                    body: body,
+                    knockOffTime: knockOffTime,
                     plan: plan,
                     token: token,
                     center: center
@@ -61,22 +110,32 @@ enum KnockOffWarningScheduler {
         }
     }
 
+    private static func matches(_ notification: UNNotification, knockOffTime: Date) -> Bool {
+        guard notification.request.identifier == KnockOffWarning.requestIdentifier else { return false }
+        let stored = notification.request.content.userInfo[KnockOffWarning.knockOffTimeKey]
+        let timestamp = (stored as? NSNumber)?.doubleValue ?? stored as? Double
+        guard let timestamp else { return false }
+        return abs(timestamp - knockOffTime.timeIntervalSince1970) < 1
+    }
+
     private static func deliver(
-        status: UNAuthorizationStatus,
         siteName: String,
-        openKnockOffCount: Int,
+        body: String,
+        knockOffTime: Date,
         plan: KnockOffWarning.Plan,
         token: Int,
         center: UNUserNotificationCenter
     ) async {
-        switch status {
+        let settings = await center.notificationSettings()
+        guard token == generation else { return }
+        switch settings.authorizationStatus {
         case .notDetermined:
             let granted = (try? await center.requestAuthorization(options: [.alert, .sound])) ?? false
             guard granted, token == generation else { return }
-            try? await center.add(request(siteName: siteName, openKnockOffCount: openKnockOffCount, plan: plan))
+            try? await center.add(request(siteName: siteName, body: body, knockOffTime: knockOffTime, plan: plan))
         case .authorized, .provisional, .ephemeral:
             guard token == generation else { return }
-            try? await center.add(request(siteName: siteName, openKnockOffCount: openKnockOffCount, plan: plan))
+            try? await center.add(request(siteName: siteName, body: body, knockOffTime: knockOffTime, plan: plan))
         case .denied:
             break
         @unknown default:
@@ -84,17 +143,18 @@ enum KnockOffWarningScheduler {
         }
     }
 
-    private static func request(siteName: String, openKnockOffCount: Int, plan: KnockOffWarning.Plan) -> UNNotificationRequest {
+    private static func request(
+        siteName: String,
+        body: String,
+        knockOffTime: Date,
+        plan: KnockOffWarning.Plan
+    ) -> UNNotificationRequest {
         let content = UNMutableNotificationContent()
         content.title = siteName
-        let defects = openKnockOffCount == 1
-            ? "1 knock-off defect is still open"
-            : "\(openKnockOffCount) knock-off defects are still open"
-        content.body = plan.isNearTerm
-            ? "Knock-off time has passed. \(defects)."
-            : "Knock-off is in 30 minutes. \(defects)."
+        content.body = body
         content.categoryIdentifier = KnockOffWarning.category
         content.sound = .default
+        content.userInfo = [KnockOffWarning.knockOffTimeKey: knockOffTime.timeIntervalSince1970]
         let trigger: UNNotificationTrigger
         if plan.isNearTerm {
             trigger = UNTimeIntervalNotificationTrigger(timeInterval: KnockOffWarning.nearTermDelay, repeats: false)

@@ -36,9 +36,9 @@ struct KnockOffWarningView: View {
         VStack(alignment: .leading, spacing: 12) {
             if let glance, glance.hasDiary {
                 header(glance)
-                defects(glance)
+                situation(glance)
             } else {
-                Text("Open the site diary to see what still has to be cleared.")
+                Text("Open the site diary to see what is still open.")
                     .font(.subheadline)
             }
         }
@@ -62,13 +62,24 @@ struct KnockOffWarningView: View {
     }
 
     @ViewBuilder
-    private func defects(_ glance: SiteDiaryGlance) -> some View {
-        if glance.knockOffLines.isEmpty {
-            Label("Nothing left to clear before knock-off", systemImage: DiarySymbols.cleared)
+    private func situation(_ glance: SiteDiaryGlance) -> some View {
+        if glance.knockOffDefectCount == 0, glance.crewOnSiteCount == 0 {
+            Label("Nothing is left open, and the crew has signed off.", systemImage: DiarySymbols.cleared)
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
         } else {
-            Text("Still to clear before knock-off")
+            if glance.knockOffDefectCount > 0 {
+                defects(glance)
+            }
+            if glance.crewOnSiteCount > 0 {
+                crew(glance)
+            }
+        }
+    }
+
+    private func defects(_ glance: SiteDiaryGlance) -> some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text(glance.knockOffDefectCount == 1 ? "1 knock-off defect is still open" : "\(glance.knockOffDefectCount) knock-off defects are still open")
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
             ForEach(Array(glance.knockOffLines.enumerated()), id: \.offset) { _, line in
@@ -87,11 +98,25 @@ struct KnockOffWarningView: View {
                     }
                 }
             }
-            if glance.knockOffDefectCount > glance.knockOffLines.count {
-                let remaining = glance.knockOffDefectCount - glance.knockOffLines.count
-                Text(remaining == 1 ? "1 more in the diary" : "\(remaining) more in the diary")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
+        }
+    }
+
+    private func crew(_ glance: SiteDiaryGlance) -> some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text(glance.crewOnSiteCount == 1 ? "1 person is still signed on" : "\(glance.crewOnSiteCount) people are still signed on")
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
+            ForEach(Array(glance.crewLines.enumerated()), id: \.offset) { _, line in
+                HStack(alignment: .firstTextBaseline, spacing: 8) {
+                    DiarySymbol(name: DiarySymbols.crew)
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text(line.name)
+                            .font(.subheadline)
+                        Text(line.trade)
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
+                }
             }
         }
     }

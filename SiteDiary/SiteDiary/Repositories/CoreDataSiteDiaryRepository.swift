@@ -222,7 +222,7 @@ struct CoreDataSiteDiaryRepository: SiteDiaryRepository {
                 SiteDiaryGlance.recording(workday: nil, knockOffDefects: [], crew: [])
             )
             WidgetCenter.shared.reloadTimelines(ofKind: SiteDiaryGlance.widgetKind)
-            warnBeforeKnockOff(workday: nil, openKnockOffCount: 0)
+            scheduleKnockOffWarning(workday: nil, openKnockOffCount: 0, crewOnSiteCount: 0)
             return
         }
         let knockOffDefects = try openKnockOffDefects(on: workday.calendarDate)
@@ -231,12 +231,20 @@ struct CoreDataSiteDiaryRepository: SiteDiaryRepository {
             SiteDiaryGlance.recording(workday: workday, knockOffDefects: knockOffDefects, crew: crewOnSite)
         )
         WidgetCenter.shared.reloadTimelines(ofKind: SiteDiaryGlance.widgetKind)
-        warnBeforeKnockOff(workday: workday, openKnockOffCount: knockOffDefects.count)
+        scheduleKnockOffWarning(
+            workday: workday,
+            openKnockOffCount: knockOffDefects.count,
+            crewOnSiteCount: crewOnSite.filter(\.isOnSite).count
+        )
     }
 
-    private func warnBeforeKnockOff(workday: Workday?, openKnockOffCount: Int) {
+    private func scheduleKnockOffWarning(workday: Workday?, openKnockOffCount: Int, crewOnSiteCount: Int) {
         guard publishesGlance else { return }
-        KnockOffWarningScheduler.schedule(for: workday, openKnockOffCount: openKnockOffCount)
+        KnockOffWarningScheduler.schedule(
+            for: workday,
+            openKnockOffCount: openKnockOffCount,
+            crewOnSiteCount: crewOnSiteCount
+        )
     }
 
     private func rememberedOpenDay(among days: [Workday]) -> Date? {
