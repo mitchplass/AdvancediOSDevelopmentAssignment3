@@ -4,9 +4,11 @@ import WidgetKit
 
 struct CoreDataSiteDiaryRepository: SiteDiaryRepository {
     private let context: NSManagedObjectContext
+    private let publishesGlance: Bool
 
     init(persistence: PersistenceController = .shared, publishesGlance: Bool = true) {
         context = persistence.container.viewContext
+        self.publishesGlance = publishesGlance
         if publishesGlance {
             try? publishGlance(preferring: nil, openOnly: true)
         }
@@ -220,6 +222,7 @@ struct CoreDataSiteDiaryRepository: SiteDiaryRepository {
                 SiteDiaryGlance.recording(workday: nil, knockOffDefects: [], crew: [])
             )
             WidgetCenter.shared.reloadTimelines(ofKind: SiteDiaryGlance.widgetKind)
+            warnBeforeKnockOff(workday: nil, openKnockOffCount: 0)
             return
         }
         let knockOffDefects = try openKnockOffDefects(on: workday.calendarDate)
@@ -228,6 +231,12 @@ struct CoreDataSiteDiaryRepository: SiteDiaryRepository {
             SiteDiaryGlance.recording(workday: workday, knockOffDefects: knockOffDefects, crew: crewOnSite)
         )
         WidgetCenter.shared.reloadTimelines(ofKind: SiteDiaryGlance.widgetKind)
+        warnBeforeKnockOff(workday: workday, openKnockOffCount: knockOffDefects.count)
+    }
+
+    private func warnBeforeKnockOff(workday: Workday?, openKnockOffCount: Int) {
+        guard publishesGlance else { return }
+        KnockOffWarningScheduler.schedule(for: workday, openKnockOffCount: openKnockOffCount)
     }
 
     private func rememberedOpenDay(among days: [Workday]) -> Date? {
