@@ -39,14 +39,28 @@ struct DiaryHomeView: View {
             }
 
             Section {
-                TextField("Site name", text: $model.siteName)
-                    .textInputAutocapitalization(.words)
-                DatePicker("Date", selection: $model.diaryDate, displayedComponents: .date)
-                DatePicker("Knock-off", selection: $model.knockOffTime, displayedComponents: .hourAndMinute)
-                Button("Open the day") {
+                HStack {
+                    DiarySymbol(name: DiarySymbols.site)
+                        .foregroundStyle(.secondary)
+                    TextField("Site name", text: $model.siteName)
+                        .textInputAutocapitalization(.words)
+                }
+                HStack {
+                    DiarySymbol(name: DiarySymbols.calendar)
+                        .foregroundStyle(.secondary)
+                    DatePicker("Date", selection: $model.diaryDate, displayedComponents: .date)
+                }
+                HStack {
+                    DiarySymbol(name: DiarySymbols.knockOff)
+                        .foregroundStyle(.secondary)
+                    DatePicker("Knock-off", selection: $model.knockOffTime, displayedComponents: .hourAndMinute)
+                }
+                Button {
                     if let day = model.openTheDay() {
                         path.append(day)
                     }
+                } label: {
+                    Label("Open the day", systemImage: DiarySymbols.openDay)
                 }
             } header: {
                 Text("Open a day")
@@ -81,14 +95,23 @@ private struct DiaryDayRow: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
             HStack {
+                DiarySymbol(name: DiarySymbols.site)
+                    .foregroundStyle(.secondary)
                 Text(workday.siteName)
                 Spacer()
-                Text(workday.status == .open ? "Open" : "Closed")
-                    .foregroundStyle(.secondary)
-            }
-            Text(workday.calendarDate.formatted(date: .complete, time: .omitted))
+                Label(
+                    workday.status == .open ? "Open" : "Closed",
+                    systemImage: workday.status == .open ? DiarySymbols.openDay : DiarySymbols.closedDay
+                )
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
+            }
+            Label(
+                workday.calendarDate.formatted(date: .complete, time: .omitted),
+                systemImage: DiarySymbols.calendar
+            )
+            .font(.subheadline)
+            .foregroundStyle(.secondary)
         }
     }
 }

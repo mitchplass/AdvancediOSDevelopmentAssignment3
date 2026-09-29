@@ -33,15 +33,25 @@ struct RecordDefectView: View {
                     .listRowBackground(Color.clear)
             }
 
-            TextField("What is wrong", text: $model.title)
-            TextField("Location, such as level and grid", text: $model.location)
+            HStack {
+                DiarySymbol(name: DiarySymbols.defect)
+                    .foregroundStyle(.secondary)
+                TextField("What is wrong", text: $model.title)
+            }
+            HStack {
+                DiarySymbol(name: DiarySymbols.location)
+                    .foregroundStyle(.secondary)
+                TextField("Location, such as level and grid", text: $model.location)
+            }
             TextField("Detail", text: $model.detail, axis: .vertical)
                 .lineLimit(3...6)
             Toggle("Must be cleared before knock-off", isOn: $model.mustClearBeforeKnockOff)
-            Button("Record defect") {
+            Button {
                 if model.record() {
                     dismiss()
                 }
+            } label: {
+                Label("Record defect", systemImage: DiarySymbols.record)
             }
         }
         .navigationTitle("Record a defect")

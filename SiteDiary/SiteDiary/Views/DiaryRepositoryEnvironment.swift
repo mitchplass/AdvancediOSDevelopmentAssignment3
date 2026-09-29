@@ -2,7 +2,8 @@ import SwiftUI
 
 private struct SiteDiaryRepositoryKey: EnvironmentKey {
     static let defaultValue: any SiteDiaryRepository = CoreDataSiteDiaryRepository(
-        persistence: PersistenceController(inMemory: true)
+        persistence: PersistenceController(inMemory: true),
+        publishesGlance: false
     )
 }
 

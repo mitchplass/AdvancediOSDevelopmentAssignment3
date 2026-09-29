@@ -44,10 +44,12 @@ struct CrewOnSiteView: View {
             if !model.onSite.isEmpty {
                 Section("On site") {
                     ForEach(model.onSite) { person in
-                        CrewRow(name: person.workerName, trade: person.trade) {
+                        CrewRow(name: person.workerName, trade: person.trade, signedOff: false) {
                             if model.canSignOn {
-                                Button("Sign off") {
+                                Button {
                                     model.signOff(person)
+                                } label: {
+                                    Label("Sign off", systemImage: DiarySymbols.signOff)
                                 }
                                 .buttonStyle(.borderless)
                             }
@@ -59,10 +61,12 @@ struct CrewOnSiteView: View {
             if !model.signedOff.isEmpty {
                 Section("Signed off") {
                     ForEach(model.signedOff) { person in
-                        CrewRow(name: person.workerName, trade: person.trade) {
+                        CrewRow(name: person.workerName, trade: person.trade, signedOff: true) {
                             if model.canSignBackOn(person) {
-                                Button("Sign back on") {
+                                Button {
                                     model.signBackOn(person)
+                                } label: {
+                                    Label("Sign back on", systemImage: DiarySymbols.signOn)
                                 }
                                 .buttonStyle(.borderless)
                             }
@@ -77,8 +81,10 @@ struct CrewOnSiteView: View {
                         .textInputAutocapitalization(.words)
                     TextField("Trade", text: $model.trade)
                         .textInputAutocapitalization(.words)
-                    Button("Sign on") {
+                    Button {
                         model.signOn()
+                    } label: {
+                        Label("Sign on", systemImage: DiarySymbols.signOn)
                     }
                 }
             }
@@ -93,10 +99,13 @@ struct CrewOnSiteView: View {
 private struct CrewRow<Action: View>: View {
     let name: String
     let trade: String
+    let signedOff: Bool
     @ViewBuilder var action: () -> Action
 
     var body: some View {
         HStack {
+            DiarySymbol(name: signedOff ? DiarySymbols.crewOff : DiarySymbols.crew)
+                .foregroundStyle(.secondary)
             VStack(alignment: .leading, spacing: 4) {
                 Text(name)
                 Text(trade)

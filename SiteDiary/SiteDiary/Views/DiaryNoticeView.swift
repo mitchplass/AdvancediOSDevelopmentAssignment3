@@ -4,11 +4,16 @@ struct DiaryNoticeView: View {
     let notice: DiaryNotice
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 4) {
-            Text(notice.whatWentWrong)
-                .font(.headline)
-            Text(notice.whatToDoNext)
-                .font(.subheadline)
+        HStack(alignment: .top, spacing: 10) {
+            DiarySymbol(name: DiarySymbols.notice)
+                .font(.title3)
+                .foregroundStyle(.orange)
+            VStack(alignment: .leading, spacing: 4) {
+                Text(notice.whatWentWrong)
+                    .font(.headline)
+                Text(notice.whatToDoNext)
+                    .font(.subheadline)
+            }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding()

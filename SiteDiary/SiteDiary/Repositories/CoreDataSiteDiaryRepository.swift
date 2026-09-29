@@ -1,11 +1,15 @@
 import CoreData
 import Foundation
+import WidgetKit
 
 struct CoreDataSiteDiaryRepository: SiteDiaryRepository {
     private let context: NSManagedObjectContext
 
-    init(persistence: PersistenceController = .shared) {
+    init(persistence: PersistenceController = .shared, publishesGlance: Bool = true) {
         context = persistence.container.viewContext
+        if publishesGlance {
+            try? publishGlance(preferring: nil, openOnly: true)
+        }
     }
 
     func workday(on day: Date) throws -> Workday? {
@@ -29,7 +33,7 @@ struct CoreDataSiteDiaryRepository: SiteDiaryRepository {
         record.calendarDate = SiteCalendar.startOfDay(for: workday.calendarDate)
         record.knockOffTime = workday.knockOffTime
         record.status = workday.status.rawValue
-        try saveContext()
+        try saveContext(publishing: workday.calendarDate)
     }
 
     func defect(id: UUID) throws -> Defect? {
@@ -72,7 +76,7 @@ struct CoreDataSiteDiaryRepository: SiteDiaryRepository {
         record.recordedAt = defect.recordedAt
         record.clearedAt = defect.clearedAt
         record.workday = workday
-        try saveContext()
+        try saveContext(publishing: workday.calendarDate)
     }
 
     func crewPresence(id: UUID) throws -> CrewPresence? {
@@ -98,7 +102,7 @@ struct CoreDataSiteDiaryRepository: SiteDiaryRepository {
         record.signedOnAt = presence.signedOnAt
         record.signedOffAt = presence.signedOffAt
         record.workday = workday
-        try saveContext()
+        try saveContext(publishing: workday.calendarDate)
     }
 
     private func fetchWorkdays(on day: Date) throws -> [Workday] {
@@ -193,12 +197,43 @@ struct CoreDataSiteDiaryRepository: SiteDiaryRepository {
         )
     }
 
-    private func saveContext() throws {
-        guard context.hasChanges else { return }
-        do {
-            try context.save()
-        } catch {
-            throw SiteDiaryStoreError.saveFailed
+    func focusWorkingDay(_ day: Date) throws {
+        try publishGlance(preferring: day, openOnly: true)
+    }
+
+    private func saveContext(publishing day: Date?) throws {
+        if context.hasChanges {
+            do {
+                try context.save()
+            } catch {
+                throw SiteDiaryStoreError.saveFailed
+            }
         }
+        try publishGlance(preferring: day, openOnly: false)
+    }
+
+    private func publishGlance(preferring preferredDay: Date?, openOnly: Bool) throws {
+        let days = try allWorkdays()
+        let preferred = preferredDay ?? rememberedOpenDay(among: days)
+        guard let workday = SiteDiaryGlance.workingWorkday(among: days, preferring: preferred, openOnly: openOnly) else {
+            try SiteDiaryGlanceStore.write(
+                SiteDiaryGlance.recording(workday: nil, knockOffDefects: [], crew: [])
+            )
+            WidgetCenter.shared.reloadTimelines(ofKind: SiteDiaryGlance.widgetKind)
+            return
+        }
+        let knockOffDefects = try openKnockOffDefects(on: workday.calendarDate)
+        let crewOnSite = try crew(for: workday.id)
+        try SiteDiaryGlanceStore.write(
+            SiteDiaryGlance.recording(workday: workday, knockOffDefects: knockOffDefects, crew: crewOnSite)
+        )
+        WidgetCenter.shared.reloadTimelines(ofKind: SiteDiaryGlance.widgetKind)
+    }
+
+    private func rememberedOpenDay(among days: [Workday]) -> Date? {
+        guard let remembered = SiteDiaryGlanceStore.read()?.calendarDate else { return nil }
+        let start = SiteCalendar.startOfDay(for: remembered)
+        let match = days.first { SiteCalendar.startOfDay(for: $0.calendarDate) == start }
+        return match?.status == .open ? remembered : nil
     }
 }

@@ -19,4 +19,6 @@ protocol SiteDiaryRepository {
     func crewPresence(id: UUID) throws -> CrewPresence?
     func crew(for workdayID: UUID) throws -> [CrewPresence]
     func save(_ presence: CrewPresence) throws
+
+    func focusWorkingDay(_ day: Date) throws
 }

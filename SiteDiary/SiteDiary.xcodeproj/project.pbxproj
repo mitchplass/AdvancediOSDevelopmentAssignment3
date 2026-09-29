@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		F1A7750E3068D2E500E23B46 /* SiteDiaryWidget.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = F1A775013068D2E500E23B46 /* SiteDiaryWidget.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		E4A774C03068D2E700E23B45 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -14,19 +18,33 @@
 			remoteGlobalIDString = E4A774AC3068D2E500E23B45;
 			remoteInfo = SiteDiary;
 		};
-		E4A774CA3068D2E700E23B45 /* PBXContainerItemProxy */ = {
+		F1A775093068D2E500E23B46 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = E4A774A53068D2E500E23B45 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = E4A774AC3068D2E500E23B45;
-			remoteInfo = SiteDiary;
+			remoteGlobalIDString = F1A775083068D2E500E23B46;
+			remoteInfo = SiteDiaryWidget;
 		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		F1A775073068D2E500E23B46 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				F1A7750E3068D2E500E23B46 /* SiteDiaryWidget.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		E4A774AD3068D2E500E23B45 /* SiteDiary.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SiteDiary.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E4A774BF3068D2E700E23B45 /* SiteDiaryTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SiteDiaryTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		E4A774C93068D2E700E23B45 /* SiteDiaryUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SiteDiaryUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		F1A775013068D2E500E23B46 /* SiteDiaryWidget.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = SiteDiaryWidget.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -40,12 +58,31 @@
 			path = SiteDiaryTests;
 			sourceTree = "<group>";
 		};
-		E4A774CC3068D2E700E23B45 /* SiteDiaryUITests */ = {
+		F1A775033068D2E500E23B46 /* SiteDiaryShared */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = SiteDiaryUITests;
+			path = SiteDiaryShared;
+			sourceTree = "<group>";
+		};
+		F1A775023068D2E500E23B46 /* SiteDiaryWidget */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				F1A7750F3068D2E500E23B46 /* PBXFileSystemSynchronizedBuildFileExceptionSet */,
+			);
+			path = SiteDiaryWidget;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		F1A7750F3068D2E500E23B46 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+				SiteDiaryWidget.entitlements,
+			);
+			target = F1A775083068D2E500E23B46 /* SiteDiaryWidget */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		E4A774AA3068D2E500E23B45 /* Frameworks */ = {
@@ -62,7 +99,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		E4A774C63068D2E700E23B45 /* Frameworks */ = {
+		F1A775043068D2E500E23B46 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -76,8 +113,9 @@
 			isa = PBXGroup;
 			children = (
 				E4A774AF3068D2E500E23B45 /* SiteDiary */,
+				F1A775033068D2E500E23B46 /* SiteDiaryShared */,
+				F1A775023068D2E500E23B46 /* SiteDiaryWidget */,
 				E4A774C23068D2E700E23B45 /* SiteDiaryTests */,
-				E4A774CC3068D2E700E23B45 /* SiteDiaryUITests */,
 				E4A774AE3068D2E500E23B45 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -87,7 +125,7 @@
 			children = (
 				E4A774AD3068D2E500E23B45 /* SiteDiary.app */,
 				E4A774BF3068D2E700E23B45 /* SiteDiaryTests.xctest */,
-				E4A774C93068D2E700E23B45 /* SiteDiaryUITests.xctest */,
+				F1A775013068D2E500E23B46 /* SiteDiaryWidget.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -102,13 +140,16 @@
 				E4A774A93068D2E500E23B45 /* Sources */,
 				E4A774AA3068D2E500E23B45 /* Frameworks */,
 				E4A774AB3068D2E500E23B45 /* Resources */,
+				F1A775073068D2E500E23B46 /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				F1A7750A3068D2E500E23B46 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				E4A774AF3068D2E500E23B45 /* SiteDiary */,
+				F1A775033068D2E500E23B46 /* SiteDiaryShared */,
 			);
 			name = SiteDiary;
 			packageProductDependencies = (
@@ -140,28 +181,28 @@
 			productReference = E4A774BF3068D2E700E23B45 /* SiteDiaryTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		E4A774C83068D2E700E23B45 /* SiteDiaryUITests */ = {
+		F1A775083068D2E500E23B46 /* SiteDiaryWidget */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = E4A774D93068D2E700E23B45 /* Build configuration list for PBXNativeTarget "SiteDiaryUITests" */;
+			buildConfigurationList = F1A7750D3068D2E500E23B46 /* Build configuration list for PBXNativeTarget "SiteDiaryWidget" */;
 			buildPhases = (
-				E4A774C53068D2E700E23B45 /* Sources */,
-				E4A774C63068D2E700E23B45 /* Frameworks */,
-				E4A774C73068D2E700E23B45 /* Resources */,
+				F1A775053068D2E500E23B46 /* Sources */,
+				F1A775043068D2E500E23B46 /* Frameworks */,
+				F1A775063068D2E500E23B46 /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				E4A774CB3068D2E700E23B45 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
-				E4A774CC3068D2E700E23B45 /* SiteDiaryUITests */,
+				F1A775023068D2E500E23B46 /* SiteDiaryWidget */,
+				F1A775033068D2E500E23B46 /* SiteDiaryShared */,
 			);
-			name = SiteDiaryUITests;
+			name = SiteDiaryWidget;
 			packageProductDependencies = (
 			);
-			productName = SiteDiaryUITests;
-			productReference = E4A774C93068D2E700E23B45 /* SiteDiaryUITests.xctest */;
-			productType = "com.apple.product-type.bundle.ui-testing";
+			productName = SiteDiaryWidget;
+			productReference = F1A775013068D2E500E23B46 /* SiteDiaryWidget.appex */;
+			productType = "com.apple.product-type.app-extension";
 		};
 /* End PBXNativeTarget section */
 
@@ -180,9 +221,8 @@
 						CreatedOnToolsVersion = 26.3;
 						TestTargetID = E4A774AC3068D2E500E23B45;
 					};
-					E4A774C83068D2E700E23B45 = {
+					F1A775083068D2E500E23B46 = {
 						CreatedOnToolsVersion = 26.3;
-						TestTargetID = E4A774AC3068D2E500E23B45;
 					};
 				};
 			};
@@ -202,7 +242,7 @@
 			targets = (
 				E4A774AC3068D2E500E23B45 /* SiteDiary */,
 				E4A774BE3068D2E700E23B45 /* SiteDiaryTests */,
-				E4A774C83068D2E700E23B45 /* SiteDiaryUITests */,
+				F1A775083068D2E500E23B46 /* SiteDiaryWidget */,
 			);
 		};
 /* End PBXProject section */
@@ -222,7 +262,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		E4A774C73068D2E700E23B45 /* Resources */ = {
+		F1A775063068D2E500E23B46 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -246,7 +286,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		E4A774C53068D2E700E23B45 /* Sources */ = {
+		F1A775053068D2E500E23B46 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -261,10 +301,10 @@
 			target = E4A774AC3068D2E500E23B45 /* SiteDiary */;
 			targetProxy = E4A774C03068D2E700E23B45 /* PBXContainerItemProxy */;
 		};
-		E4A774CB3068D2E700E23B45 /* PBXTargetDependency */ = {
+		F1A7750A3068D2E500E23B46 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = E4A774AC3068D2E500E23B45 /* SiteDiary */;
-			targetProxy = E4A774CA3068D2E700E23B45 /* PBXContainerItemProxy */;
+			target = F1A775083068D2E500E23B46 /* SiteDiaryWidget */;
+			targetProxy = F1A775093068D2E500E23B46 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -500,43 +540,59 @@
 			};
 			name = Release;
 		};
-		E4A774DA3068D2E700E23B45 /* Debug */ = {
+		F1A7750B3068D2E500E23B46 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = SiteDiaryWidget/SiteDiaryWidget.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 4V28M9347U;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = SiteDiaryWidget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Site Diary";
+				IPHONEOS_DEPLOYMENT_TARGET = 26.2;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.iosdev.SiteDiaryUITests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.iosdev.SiteDiary.SiteDiaryWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SKIP_INSTALL = YES;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
-				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = SiteDiary;
 			};
 			name = Debug;
 		};
-		E4A774DB3068D2E700E23B45 /* Release */ = {
+		F1A7750C3068D2E500E23B46 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = SiteDiaryWidget/SiteDiaryWidget.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 4V28M9347U;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = SiteDiaryWidget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Site Diary";
+				IPHONEOS_DEPLOYMENT_TARGET = 26.2;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.iosdev.SiteDiaryUITests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.iosdev.SiteDiary.SiteDiaryWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SKIP_INSTALL = YES;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
-				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = SiteDiary;
 			};
 			name = Release;
 		};
@@ -570,11 +626,11 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		E4A774D93068D2E700E23B45 /* Build configuration list for PBXNativeTarget "SiteDiaryUITests" */ = {
+		F1A7750D3068D2E500E23B46 /* Build configuration list for PBXNativeTarget "SiteDiaryWidget" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				E4A774DA3068D2E700E23B45 /* Debug */,
-				E4A774DB3068D2E700E23B45 /* Release */,
+				F1A7750B3068D2E500E23B46 /* Debug */,
+				F1A7750C3068D2E500E23B46 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

@@ -22,6 +22,9 @@ final class DayOnSiteViewModel {
             if let workday {
                 knockOffDefectCount = try repository.openKnockOffDefects(on: day).count
                 crewOnSiteCount = try repository.crew(for: workday.id).filter(\.isOnSite).count
+                if workday.status == .open {
+                    try repository.focusWorkingDay(day)
+                }
             } else {
                 knockOffDefectCount = 0
                 crewOnSiteCount = 0

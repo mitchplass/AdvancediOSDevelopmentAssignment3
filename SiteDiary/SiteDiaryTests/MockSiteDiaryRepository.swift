@@ -69,4 +69,6 @@ final class MockSiteDiaryRepository: SiteDiaryRepository {
             crew.append(presence)
         }
     }
+
+    func focusWorkingDay(_ day: Date) throws {}
 }
