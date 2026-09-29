@@ -28,6 +28,9 @@ enum KnockOffWarningScheduler {
         generation += 1
         let token = generation
         guard let workday, workday.status == .open, openKnockOffCount > 0 else {
+            UNUserNotificationCenter.current().removePendingNotificationRequests(
+                withIdentifiers: [KnockOffWarning.requestIdentifier]
+            )
             return
         }
 
