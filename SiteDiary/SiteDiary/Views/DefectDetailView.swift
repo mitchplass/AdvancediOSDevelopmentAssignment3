@@ -33,22 +33,40 @@ struct DefectDetailView: View {
             }
 
             if let defect = model.defect {
-                LabeledContent("What is wrong", value: defect.title)
-                LabeledContent("Location", value: defect.location)
+                LabeledContent {
+                    Text(defect.title)
+                } label: {
+                    Label("What is wrong", systemImage: DiarySymbols.defect)
+                }
+                LabeledContent {
+                    Text(defect.location)
+                } label: {
+                    Label("Location", systemImage: DiarySymbols.location)
+                }
                 if !defect.detail.isEmpty {
                     LabeledContent("Detail", value: defect.detail)
                 }
-                LabeledContent(
-                    "Before knock-off",
-                    value: defect.mustClearBeforeKnockOff ? "Must be cleared" : "Can wait"
-                )
-                LabeledContent("Status", value: defect.status == .open ? "Open" : "Cleared")
+                LabeledContent {
+                    Text(defect.mustClearBeforeKnockOff ? "Must be cleared" : "Can wait")
+                } label: {
+                    Label("Before knock-off", systemImage: DiarySymbols.knockOff)
+                }
+                LabeledContent {
+                    Text(defect.status == .open ? "Open" : "Cleared")
+                } label: {
+                    Label(
+                        "Status",
+                        systemImage: defect.status == .cleared ? DiarySymbols.cleared : DiarySymbols.openDay
+                    )
+                }
                 if let clearedAt = defect.clearedAt {
                     LabeledContent("Cleared", value: clearedAt.formatted(date: .omitted, time: .shortened))
                 }
                 if defect.status == .open {
-                    Button("Mark cleared") {
+                    Button {
                         model.markCleared()
+                    } label: {
+                        Label("Mark cleared", systemImage: DiarySymbols.cleared)
                     }
                 }
             }

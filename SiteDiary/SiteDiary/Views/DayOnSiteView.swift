@@ -34,26 +34,55 @@ struct DayOnSiteView: View {
 
             if let workday = model.workday {
                 Section {
-                    LabeledContent("Site", value: workday.siteName)
-                    LabeledContent("Date", value: workday.calendarDate.formatted(date: .complete, time: .omitted))
-                    LabeledContent("Knock-off", value: workday.knockOffTime.formatted(date: .omitted, time: .shortened))
-                    LabeledContent("Status", value: workday.status == .open ? "Open" : "Closed")
+                    LabeledContent {
+                        Text(workday.siteName)
+                    } label: {
+                        Label("Site", systemImage: DiarySymbols.site)
+                    }
+                    LabeledContent {
+                        Text(workday.calendarDate.formatted(date: .complete, time: .omitted))
+                    } label: {
+                        Label("Date", systemImage: DiarySymbols.calendar)
+                    }
+                    LabeledContent {
+                        Text(workday.knockOffTime.formatted(date: .omitted, time: .shortened))
+                    } label: {
+                        Label("Knock-off", systemImage: DiarySymbols.knockOff)
+                    }
+                    LabeledContent {
+                        Text(workday.status == .open ? "Open" : "Closed")
+                    } label: {
+                        Label(
+                            "Status",
+                            systemImage: workday.status == .open ? DiarySymbols.openDay : DiarySymbols.closedDay
+                        )
+                    }
                 }
 
                 Section {
                     NavigationLink {
                         DefectListScreen(day: model.day)
                     } label: {
-                        LabeledContent("Knock-off defects", value: "\(model.knockOffDefectCount)")
+                        LabeledContent {
+                            Text("\(model.knockOffDefectCount)")
+                        } label: {
+                            Label("Knock-off defects", systemImage: DiarySymbols.defect)
+                        }
                     }
                     NavigationLink {
                         CrewOnSiteScreen(day: model.day)
                     } label: {
-                        LabeledContent("Crew on site", value: "\(model.crewOnSiteCount)")
+                        LabeledContent {
+                            Text("\(model.crewOnSiteCount)")
+                        } label: {
+                            Label("Crew on site", systemImage: DiarySymbols.crew)
+                        }
                     }
                     if workday.status == .open {
-                        NavigationLink("Close out the day") {
+                        NavigationLink {
                             CloseOutScreen(day: model.day)
+                        } label: {
+                            Label("Close out the day", systemImage: DiarySymbols.closeOut)
                         }
                     }
                 }

@@ -76,6 +76,9 @@ struct SiteDiaryGlanceView: View {
 
     private var empty: some View {
         VStack(alignment: .leading, spacing: 6) {
+            DiarySymbol(name: DiarySymbols.site)
+                .font(.title3)
+                .foregroundStyle(.secondary)
             Text("Site diary")
                 .font(.headline)
             Text("No day is open.")
@@ -99,19 +102,23 @@ struct SiteDiaryGlanceView: View {
     private func compactDiary(_ glance: SiteDiaryGlance) -> some View {
         VStack(alignment: .leading, spacing: 4) {
             header(glance)
-            Text(knockOffLine(glance))
-                .font(family == .systemSmall ? .subheadline : .body)
-                .lineLimit(2)
+            fact(
+                knockOffLine(glance),
+                symbol: glance.knockOffDefectCount == 0 ? DiarySymbols.cleared : DiarySymbols.defect,
+                tint: glance.knockOffDefectCount == 0 ? .secondary : .orange
+            )
+            .font(family == .systemSmall ? .subheadline : .body)
             if family == .systemMedium, let location = glance.firstKnockOffLocation, glance.knockOffDefectCount > 0 {
-                Text(location)
+                fact(location, symbol: DiarySymbols.location, tint: .secondary)
                     .font(.subheadline)
-                    .foregroundStyle(.secondary)
-                    .lineLimit(2)
             }
             Spacer(minLength: 0)
-            Text(crewLine(glance))
-                .font(.caption)
-                .foregroundStyle(.secondary)
+            fact(
+                crewLine(glance),
+                symbol: glance.crewOnSiteCount == 0 ? DiarySymbols.crewOff : DiarySymbols.crew,
+                tint: .secondary
+            )
+            .font(.caption)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
     }
@@ -119,15 +126,22 @@ struct SiteDiaryGlanceView: View {
     private func largeDiary(_ glance: SiteDiaryGlance) -> some View {
         VStack(alignment: .leading, spacing: 8) {
             header(glance)
-            Text(knockOffLine(glance))
-                .font(.headline)
-                .lineLimit(2)
+            fact(
+                knockOffLine(glance),
+                symbol: glance.knockOffDefectCount == 0 ? DiarySymbols.cleared : DiarySymbols.defect,
+                tint: glance.knockOffDefectCount == 0 ? .secondary : .orange
+            )
+            .font(.headline)
             Text(knockOffDetail(glance))
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
                 .lineLimit(4)
-            Text(crewLine(glance))
-                .font(.headline)
+            fact(
+                crewLine(glance),
+                symbol: glance.crewOnSiteCount == 0 ? DiarySymbols.crewOff : DiarySymbols.crew,
+                tint: .secondary
+            )
+            .font(.headline)
             Text(crewDetail(glance))
                 .font(.subheadline)
                 .lineLimit(4)
@@ -158,18 +172,42 @@ struct SiteDiaryGlanceView: View {
     private func header(_ glance: SiteDiaryGlance) -> some View {
         VStack(alignment: .leading, spacing: 2) {
             HStack(alignment: .firstTextBaseline) {
+                DiarySymbol(name: DiarySymbols.site)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
                 Text(glance.siteName)
                     .font(.headline)
                     .lineLimit(1)
                 Spacer(minLength: 8)
-                Text(glance.dayIsOpen ? "Open" : "Closed")
+                if family == .systemSmall {
+                    Image(systemName: glance.dayIsOpen ? DiarySymbols.openDay : DiarySymbols.closedDay)
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                        .accessibilityLabel(glance.dayIsOpen ? "Open" : "Closed")
+                } else {
+                    Label(
+                        glance.dayIsOpen ? "Open" : "Closed",
+                        systemImage: glance.dayIsOpen ? DiarySymbols.openDay : DiarySymbols.closedDay
+                    )
                     .font(.caption)
                     .foregroundStyle(.secondary)
+                    .labelStyle(.titleAndIcon)
+                }
             }
             Text(glance.calendarDate.formatted(date: family == .systemLarge ? .complete : .abbreviated, time: .omitted))
                 .font(.caption)
                 .foregroundStyle(.secondary)
                 .lineLimit(1)
+        }
+    }
+
+    private func fact(_ title: String, symbol: String, tint: Color) -> some View {
+        HStack(alignment: .firstTextBaseline, spacing: 6) {
+            DiarySymbol(name: symbol)
+                .font(.caption)
+                .foregroundStyle(tint)
+            Text(title)
+                .lineLimit(2)
         }
     }
 

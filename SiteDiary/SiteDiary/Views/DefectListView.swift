@@ -61,8 +61,10 @@ struct DefectListView: View {
         .toolbar {
             if model.canRecord {
                 ToolbarItem(placement: .primaryAction) {
-                    NavigationLink("Record a defect") {
+                    NavigationLink {
                         RecordDefectScreen(day: model.day)
+                    } label: {
+                        Label("Record a defect", systemImage: DiarySymbols.record)
                     }
                 }
             }
@@ -80,19 +82,23 @@ private struct DefectRow: View {
         NavigationLink {
             DefectDetailScreen(defectID: defect.id)
         } label: {
-            VStack(alignment: .leading, spacing: 4) {
-                Text(defect.title)
-                Text(defect.location)
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
-                if defect.mustClearBeforeKnockOff && defect.status == .open {
-                    Text("Must be cleared before knock-off")
-                        .font(.caption)
-                        .foregroundStyle(.orange)
-                } else if defect.status == .cleared {
-                    Text("Cleared")
-                        .font(.caption)
+            HStack(alignment: .top, spacing: 10) {
+                DiarySymbol(name: defect.status == .cleared ? DiarySymbols.cleared : DiarySymbols.defect)
+                    .foregroundStyle(defect.mustClearBeforeKnockOff && defect.status == .open ? .orange : .secondary)
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(defect.title)
+                    Label(defect.location, systemImage: DiarySymbols.location)
+                        .font(.subheadline)
                         .foregroundStyle(.secondary)
+                    if defect.mustClearBeforeKnockOff && defect.status == .open {
+                        Text("Must be cleared before knock-off")
+                            .font(.caption)
+                            .foregroundStyle(.orange)
+                    } else if defect.status == .cleared {
+                        Text("Cleared")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
                 }
             }
         }

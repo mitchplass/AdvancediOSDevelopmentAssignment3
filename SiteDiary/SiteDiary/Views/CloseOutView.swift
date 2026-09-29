@@ -34,24 +34,33 @@ struct CloseOutView: View {
             }
 
             if model.isClosed {
-                Text("The day is closed.")
+                Label("The day is closed.", systemImage: DiarySymbols.closedDay)
             } else if !model.hasOpenDiary {
                 Text("Open the day before you close it out.")
                     .foregroundStyle(.secondary)
             } else if model.canClose {
-                Text("Nothing must be cleared before knock-off, and the crew is signed off.")
-                Button("Close out the day") {
+                Label(
+                    "Nothing must be cleared before knock-off, and the crew is signed off.",
+                    systemImage: DiarySymbols.cleared
+                )
+                Button {
                     model.closeOut()
+                } label: {
+                    Label("Close out the day", systemImage: DiarySymbols.closeOut)
                 }
             } else {
                 if !model.remaining.isEmpty {
                     Section("Still open before knock-off") {
                         ForEach(model.remaining) { defect in
-                            VStack(alignment: .leading, spacing: 4) {
-                                Text(defect.title)
-                                Text(defect.location)
-                                    .font(.subheadline)
-                                    .foregroundStyle(.secondary)
+                            HStack(alignment: .top, spacing: 10) {
+                                DiarySymbol(name: DiarySymbols.defect)
+                                    .foregroundStyle(.orange)
+                                VStack(alignment: .leading, spacing: 4) {
+                                    Text(defect.title)
+                                    Label(defect.location, systemImage: DiarySymbols.location)
+                                        .font(.subheadline)
+                                        .foregroundStyle(.secondary)
+                                }
                             }
                         }
                     }
@@ -59,18 +68,24 @@ struct CloseOutView: View {
                 if !model.crewStillOnSite.isEmpty {
                     Section("Still signed on") {
                         ForEach(model.crewStillOnSite) { person in
-                            VStack(alignment: .leading, spacing: 4) {
-                                Text(person.workerName)
-                                Text(person.trade)
-                                    .font(.subheadline)
+                            HStack(alignment: .top, spacing: 10) {
+                                DiarySymbol(name: DiarySymbols.crew)
                                     .foregroundStyle(.secondary)
+                                VStack(alignment: .leading, spacing: 4) {
+                                    Text(person.workerName)
+                                    Text(person.trade)
+                                        .font(.subheadline)
+                                        .foregroundStyle(.secondary)
+                                }
                             }
                         }
                     }
                 }
                 Section {
-                    Button("Close out the day") {
+                    Button {
                         model.closeOut()
+                    } label: {
+                        Label("Close out the day", systemImage: DiarySymbols.closeOut)
                     }
                     .disabled(true)
                 } footer: {
