@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A2B8861E3068D2E700E23B47 /* KnockOffNotificationContent.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = A2B886113068D2E700E23B47 /* KnockOffNotificationContent.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		F1A7750E3068D2E500E23B46 /* SiteDiaryWidget.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = F1A775013068D2E500E23B46 /* SiteDiaryWidget.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
@@ -17,6 +18,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = E4A774AC3068D2E500E23B45;
 			remoteInfo = SiteDiary;
+		};
+		A2B886193068D2E700E23B47 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = E4A774A53068D2E500E23B45 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A2B886183068D2E700E23B47;
+			remoteInfo = KnockOffNotificationContent;
 		};
 		F1A775093068D2E500E23B46 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -34,6 +42,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
+				A2B8861E3068D2E700E23B47 /* KnockOffNotificationContent.appex in Embed Foundation Extensions */,
 				F1A7750E3068D2E500E23B46 /* SiteDiaryWidget.appex in Embed Foundation Extensions */,
 			);
 			name = "Embed Foundation Extensions";
@@ -44,6 +53,7 @@
 /* Begin PBXFileReference section */
 		E4A774AD3068D2E500E23B45 /* SiteDiary.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SiteDiary.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E4A774BF3068D2E700E23B45 /* SiteDiaryTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SiteDiaryTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		A2B886113068D2E700E23B47 /* KnockOffNotificationContent.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = KnockOffNotificationContent.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		F1A775013068D2E500E23B46 /* SiteDiaryWidget.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = SiteDiaryWidget.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -63,6 +73,14 @@
 			path = SiteDiaryShared;
 			sourceTree = "<group>";
 		};
+		A2B886123068D2E700E23B47 /* KnockOffNotificationContent */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				A2B8861F3068D2E700E23B47 /* PBXFileSystemSynchronizedBuildFileExceptionSet */,
+			);
+			path = KnockOffNotificationContent;
+			sourceTree = "<group>";
+		};
 		F1A775023068D2E500E23B46 /* SiteDiaryWidget */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
@@ -74,6 +92,14 @@
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		A2B8861F3068D2E700E23B47 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+				KnockOffNotificationContent.entitlements,
+			);
+			target = A2B886183068D2E700E23B47 /* KnockOffNotificationContent */;
+		};
 		F1A7750F3068D2E500E23B46 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
@@ -99,6 +125,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		A2B886143068D2E700E23B47 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		F1A775043068D2E500E23B46 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -115,6 +148,7 @@
 				E4A774AF3068D2E500E23B45 /* SiteDiary */,
 				F1A775033068D2E500E23B46 /* SiteDiaryShared */,
 				F1A775023068D2E500E23B46 /* SiteDiaryWidget */,
+				A2B886123068D2E700E23B47 /* KnockOffNotificationContent */,
 				E4A774C23068D2E700E23B45 /* SiteDiaryTests */,
 				E4A774AE3068D2E500E23B45 /* Products */,
 			);
@@ -126,6 +160,7 @@
 				E4A774AD3068D2E500E23B45 /* SiteDiary.app */,
 				E4A774BF3068D2E700E23B45 /* SiteDiaryTests.xctest */,
 				F1A775013068D2E500E23B46 /* SiteDiaryWidget.appex */,
+				A2B886113068D2E700E23B47 /* KnockOffNotificationContent.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -146,6 +181,7 @@
 			);
 			dependencies = (
 				F1A7750A3068D2E500E23B46 /* PBXTargetDependency */,
+				A2B8861A3068D2E700E23B47 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				E4A774AF3068D2E500E23B45 /* SiteDiary */,
@@ -204,6 +240,29 @@
 			productReference = F1A775013068D2E500E23B46 /* SiteDiaryWidget.appex */;
 			productType = "com.apple.product-type.app-extension";
 		};
+		A2B886183068D2E700E23B47 /* KnockOffNotificationContent */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A2B8861D3068D2E700E23B47 /* Build configuration list for PBXNativeTarget "KnockOffNotificationContent" */;
+			buildPhases = (
+				A2B886153068D2E700E23B47 /* Sources */,
+				A2B886143068D2E700E23B47 /* Frameworks */,
+				A2B886163068D2E700E23B47 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				A2B886123068D2E700E23B47 /* KnockOffNotificationContent */,
+				F1A775033068D2E500E23B46 /* SiteDiaryShared */,
+			);
+			name = KnockOffNotificationContent;
+			packageProductDependencies = (
+			);
+			productName = KnockOffNotificationContent;
+			productReference = A2B886113068D2E700E23B47 /* KnockOffNotificationContent.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -220,6 +279,9 @@
 					E4A774BE3068D2E700E23B45 = {
 						CreatedOnToolsVersion = 26.3;
 						TestTargetID = E4A774AC3068D2E500E23B45;
+					};
+					A2B886183068D2E700E23B47 = {
+						CreatedOnToolsVersion = 26.3;
 					};
 					F1A775083068D2E500E23B46 = {
 						CreatedOnToolsVersion = 26.3;
@@ -243,6 +305,7 @@
 				E4A774AC3068D2E500E23B45 /* SiteDiary */,
 				E4A774BE3068D2E700E23B45 /* SiteDiaryTests */,
 				F1A775083068D2E500E23B46 /* SiteDiaryWidget */,
+				A2B886183068D2E700E23B47 /* KnockOffNotificationContent */,
 			);
 		};
 /* End PBXProject section */
@@ -256,6 +319,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		E4A774BD3068D2E700E23B45 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A2B886163068D2E700E23B47 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -286,6 +356,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		A2B886153068D2E700E23B47 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		F1A775053068D2E500E23B46 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -300,6 +377,11 @@
 			isa = PBXTargetDependency;
 			target = E4A774AC3068D2E500E23B45 /* SiteDiary */;
 			targetProxy = E4A774C03068D2E700E23B45 /* PBXContainerItemProxy */;
+		};
+		A2B8861A3068D2E700E23B47 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A2B886183068D2E700E23B47 /* KnockOffNotificationContent */;
+			targetProxy = A2B886193068D2E700E23B47 /* PBXContainerItemProxy */;
 		};
 		F1A7750A3068D2E500E23B46 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -540,6 +622,62 @@
 			};
 			name = Release;
 		};
+		A2B8861B3068D2E700E23B47 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = KnockOffNotificationContent/KnockOffNotificationContent.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 4V28M9347U;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = KnockOffNotificationContent/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Site Diary";
+				IPHONEOS_DEPLOYMENT_TARGET = 26.2;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.iosdev.SiteDiary.KnockOffNotificationContent;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		A2B8861C3068D2E700E23B47 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = KnockOffNotificationContent/KnockOffNotificationContent.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 4V28M9347U;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = KnockOffNotificationContent/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Site Diary";
+				IPHONEOS_DEPLOYMENT_TARGET = 26.2;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.iosdev.SiteDiary.KnockOffNotificationContent;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 		F1A7750B3068D2E500E23B46 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -622,6 +760,15 @@
 			buildConfigurations = (
 				E4A774D73068D2E700E23B45 /* Debug */,
 				E4A774D83068D2E700E23B45 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A2B8861D3068D2E700E23B47 /* Build configuration list for PBXNativeTarget "KnockOffNotificationContent" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A2B8861B3068D2E700E23B47 /* Debug */,
+				A2B8861C3068D2E700E23B47 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
